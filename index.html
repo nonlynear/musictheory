@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jacob Collier Method — 30-Day Music Theory</title>
+  <meta name="description" content="A 30-day music theory program inspired by Jacob Collier. Piano-first, beginner-friendly. 15 minutes a day." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body { background: #0e0c1a; color: #eae6f8; font-family: Georgia, serif; -webkit-font-smoothing: antialiased; }
+    #root { min-height: 100vh; }
+    button { font-family: Georgia, serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0e0c1a; }
+    ::-webkit-scrollbar-thumb { background: #2e2850; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React 18 from CDN -->
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
+  <script>
+    // Expose React hooks globally so compiled code can access them
+    const { useState, useEffect, useRef, useCallback } = React;
+
+const C = {
+  bg: "#0e0c1a",
+  surface: "#16132a",
+  card: "#1e1a35",
+  border: "#2e2850",
+  gold: "#f0b429",
+  amber: "#e07b00",
+  cream: "#f5edd8",
+  muted: "#7a7098",
+  soft: "#c4b8e8",
+  green: "#34c98a",
+  red: "#f05e6a",
+  blue: "#5b9cf6",
+  purple: "#9f7aea",
+  text: "#eae6f8"
+};
+const WEEK_THEMES = [{
+  label: "Week 1 · The Language",
+  color: "#f0b429",
+  emoji: "🎹"
+}, {
+  label: "Week 2 · Harmony",
+  color: "#f05e6a",
+  emoji: "🎼"
+}, {
+  label: "Week 3 · Rhythm & Mode",
+  color: "#34c98a",
+  emoji: "🥁"
+}, {
+  label: "Week 4 · Deep Color",
+  color: "#9f7aea",
+  emoji: "🌈"
+}, {
+  label: "Beyond · The Journey",
+  color: "#5b9cf6",
+  emoji: "🚀"
+}];
+const DAYS = [{
+  week: 1,
+  day: 1,
+  title: "The 12 Notes — Your Whole Universe",
+  subtitle: "Everything ever written uses only these 12 sounds",
+  collier: "\"I found the piano utterly magnetic — every piece of music ever made was hiding in those black and white keys.\"",
+  theory: "There are only 12 unique pitches in all of Western music. Play any note — go up 12 half steps — and you land on the same note, just higher. That cycle is an octave.\n\nOn the piano: 7 white keys are C D E F G A B. The 5 black keys are sharps (♯) or flats (♭). Then it repeats forever.\n\nEvery symphony, pop song, jazz solo — 12 notes. That's your whole universe.",
+  pianoFocus: "Find every C on the keyboard. C always sits immediately to the LEFT of the group of 2 black keys. Play them low to high — same note, different octave. Let them feel familiar.",
+  earTask: "Hum any note. Find it on the piano. Now go up one half step at a time, counting to 12 — you're back where you started. That's the octave. Let it feel circular.",
+  jamPrompt: "Spend 3 minutes playing any white keys, any order, any rhythm. No rules. Which notes feel 'home'? Which feel restless? Trust your gut — this is your ear beginning to develop.",
+  quiz: [{
+    q: "How many unique pitches exist in Western music?",
+    a: "12 — then they repeat in higher/lower octaves.",
+    hint: "Think of a clock face with 12 positions."
+  }, {
+    q: "Where is C on the piano?",
+    a: "Immediately to the LEFT of the group of 2 black keys.",
+    hint: "Look for the 2 black keys — C hugs their left side."
+  }, {
+    q: "What are the 7 white key names?",
+    a: "C – D – E – F – G – A – B (then back to C)",
+    hint: "Do Re Mi Fa Sol La Ti — same notes!"
+  }, {
+    q: "What does 'octave' mean?",
+    a: "The same note 12 half-steps higher or lower — same name, different pitch.",
+    hint: "'Octo' = 8; it's the 8th note of any scale."
+  }],
+  pianoHL: ["C"],
+  scaleName: "All C notes"
+}, {
+  week: 1,
+  day: 2,
+  title: "Half Steps & Whole Steps",
+  subtitle: "The atoms of all melody and emotion",
+  collier: "\"The distance between notes IS the emotion. Two notes close together create tension. Space between them — freedom.\"",
+  theory: "Half step (semitone): adjacent keys on the piano. C to C♯. E to F.\nWhole step (tone): skip one key. C to D. E to F♯.\n\nThese tiny distances are the emotional atoms of music. A chord changes personality by a single half step. Jacob Collier obsesses over this because the smallest distance can create the greatest feeling.\n\nImportant: between E and F, and between B and C, there is NO black key — these are natural half steps.",
+  pianoFocus: "Play C then C♯ (black key right next to it) — half step tension. Now play C then D (skip C♯) — whole step, more open. Go back and forth. Feel the difference in your gut, not just your ears.",
+  earTask: "Play C and C♯ together — hear the clash. Now play C and E together — much sweeter. The difference is just 3 half steps, but emotionally it's a universe apart. This is where music lives.",
+  jamPrompt: "Walk up the keyboard one half step at a time from C, singing each note. Count to 12. Notice where E→F and B→C feel 'closer' — no black key between them. Those natural half steps are the skeleton of every scale.",
+  quiz: [{
+    q: "What is a half step?",
+    a: "The distance between two adjacent keys — the smallest interval in Western music.",
+    hint: "Adjacent = right next to each other, no key between."
+  }, {
+    q: "What is a whole step?",
+    a: "Two half steps — skipping one key between them.",
+    hint: "C to D skips over C♯."
+  }, {
+    q: "Where are the natural half steps on the white keys?",
+    a: "E to F, and B to C — no black key between them.",
+    hint: "Look at the keyboard — where are white keys touching?"
+  }, {
+    q: "Which feels more tense played together: half step or whole step?",
+    a: "Half step — it creates maximum harmonic friction.",
+    hint: "Think of what feels like 'rubbing' vs 'open'."
+  }],
+  pianoHL: ["C", "D", "E", "F", "G", "A", "B"],
+  scaleName: "White key steps"
+}, {
+  week: 1,
+  day: 3,
+  title: "The Major Scale — Sunshine in a Formula",
+  subtitle: "W-W-H-W-W-W-H: the most important pattern in music",
+  collier: "\"A scale is not a cage — it's a mood. C major feels like an open window on a bright morning.\"",
+  theory: "The major scale follows this exact recipe of whole (W) and half (H) steps:\nW – W – H – W – W – W – H\n\nStart on C:\nC →W→ D →W→ E →H→ F →W→ G →W→ A →W→ B →H→ C\n\nResult: C D E F G A B — all white keys! That 'do-re-mi' sound you know by heart is this formula. The half steps at E→F and B→C create that satisfying, resolved feeling when you arrive home.",
+  pianoFocus: "Play C-D-E-F-G-A-B-C slowly with right hand, thumb on C. Let each note ring. Going up: sunshine. Coming back down: homecoming. Feel those half steps at E→F and B→C — they're what makes it feel 'right'.",
+  earTask: "Sing 'Do-Re-Mi-Fa-Sol-La-Ti-Do' while playing it on piano. Match your voice to each key. Jacob's ear was trained exactly this way — always singing what he played, hearing the note before striking it.",
+  jamPrompt: "Improvise using ONLY C D E G A (skip F and B for now — this is the pentatonic). Set a 2-minute timer. Play slowly. Which note feels like 'home'? Which feels like it wants to go somewhere? That feeling IS music theory.",
+  quiz: [{
+    q: "What is the interval formula for a major scale?",
+    a: "W–W–H–W–W–W–H",
+    hint: "Two wholes, one half, three wholes, one half."
+  }, {
+    q: "What are the notes of C major?",
+    a: "C – D – E – F – G – A – B – C",
+    hint: "All white keys on the piano!"
+  }, {
+    q: "Where are the half steps in C major?",
+    a: "Between E–F (notes 3–4) and B–C (notes 7–8).",
+    hint: "The only spots with no black key between white keys."
+  }, {
+    q: "Why is C major a great starting key?",
+    a: "It uses only white keys — the W-W-H-W-W-W-H formula lands perfectly starting from C.",
+    hint: "No sharps or flats to worry about."
+  }],
+  pianoHL: ["C", "D", "E", "F", "G", "A", "B"],
+  scaleName: "C Major Scale"
+}, {
+  week: 1,
+  day: 4,
+  title: "The Minor Scale — Complexity & Depth",
+  subtitle: "Same notes as major, completely different soul",
+  collier: "\"Minor isn't sad. It holds more. It's where bittersweet lives — the most human of feelings.\"",
+  theory: "The natural minor scale formula: W – H – W – W – H – W – W\n\nBut here's the beautiful secret: A minor uses the EXACT same notes as C major — just starting from A:\nA – B – C – D – E – F – G – A\n\nThis is the relative minor. C major and A minor are a pair — same notes, entirely different worlds. The starting note (tonic) recontextualises everything. Jacob Collier's insight: same information, different perspective = completely different emotion.",
+  pianoFocus: "Play C major (C to C, all white keys), then play A minor (A to A, all white keys). Same keys. Completely different feeling. The first sounds bright and open; the second sounds deeper, more complex. That shift is just where you decide 'home' is.",
+  earTask: "Hum a happy melody using C major. Then hum a melody starting and ending on A — using the same notes. Hear it shift from bright to something deeper? That's relative major/minor in action — same 7 notes, two emotional worlds.",
+  jamPrompt: "Play Am → C → F → G slowly, 4 beats each. Loop it. This is the most common chord progression in pop music. Improvise a melody using only A B C D E. Let the melody breathe — leave space. That space is where the emotion lives.",
+  quiz: [{
+    q: "What is the interval formula for natural minor?",
+    a: "W–H–W–W–H–W–W",
+    hint: "Compare to major: W-W-H-W-W-W-H. The half steps moved."
+  }, {
+    q: "What are the notes of A minor?",
+    a: "A – B – C – D – E – F – G – A",
+    hint: "All white keys — same as C major!"
+  }, {
+    q: "What does 'relative minor' mean?",
+    a: "A minor scale sharing all the same notes as a major scale, starting from the 6th degree.",
+    hint: "A is the 6th note of C major (C-D-E-F-G-A)."
+  }, {
+    q: "How do C major and A minor sound different if they use the same notes?",
+    a: "The starting/ending note (tonic) creates a completely different emotional centre.",
+    hint: "Same story, different narrator."
+  }],
+  pianoHL: ["A", "B", "C", "D", "E", "F", "G"],
+  scaleName: "A Natural Minor"
+}, {
+  week: 1,
+  day: 5,
+  title: "Building Chords — Stacking Thirds",
+  subtitle: "Root + Third + Fifth: the foundation of all harmony",
+  collier: "\"A chord is a decision. Every note you add changes the story you're telling.\"",
+  theory: "A triad (3-note chord) is built by stacking thirds — taking every other note of a scale:\n\nC major scale: C D E F G A B\nTake C, skip D, take E, skip F, take G\nResult: C – E – G = C major chord\n\nThree notes:\n• Root (C) — the name-giver, the foundation\n• Third (E) — determines the mood (major or minor)\n• Fifth (G) — adds stability and fullness\n\nChange just one note: lower E to E♭ → C minor (C–E♭–G). That single half-step shift is the entire major/minor universe.",
+  pianoFocus: "Play C-E-G together (C major). Hold it. Now move your middle finger from E down one key to E♭ (the black key). That's C minor. Repeat: C major → C minor → C major. That ONE note is everything.",
+  earTask: "Play C major, close your eyes, feel it. Open, bright, resolved. Now C minor — feel that shift inward. Jacob says major is 'what is' and minor is 'what could have been.' Do you feel the story in those two chords?",
+  jamPrompt: "Build triads on every white key of C major: C-E-G, D-F-A, E-G-B, F-A-C, G-B-D, A-C-E, B-D-F. Play each slowly. Trust your ear — which sound major (bright) and which sound minor (deeper)? Don't look up the answer yet.",
+  quiz: [{
+    q: "What are the 3 notes of a triad?",
+    a: "Root, Third, and Fifth — stacked in intervals of thirds.",
+    hint: "Every other note of a scale: 1st, 3rd, 5th."
+  }, {
+    q: "What notes make a C major triad?",
+    a: "C – E – G",
+    hint: "Root=C, skip D, Third=E, skip F, Fifth=G."
+  }, {
+    q: "What single change turns C major into C minor?",
+    a: "Lower the third by a half step: E becomes E♭.",
+    hint: "Major third (4 half steps) → Minor third (3 half steps)."
+  }, {
+    q: "What role does the third play in a chord?",
+    a: "It determines whether the chord is major (bright) or minor (deeper) — the emotional heart.",
+    hint: "The third is the 'mood note' of any chord."
+  }],
+  pianoHL: ["C", "E", "G"],
+  scaleName: "C Major Chord"
+}, {
+  week: 1,
+  day: 6,
+  title: "Your First Chord Progressions",
+  subtitle: "I – IV – V: three chords that built all of pop music",
+  collier: "\"The I-IV-V is the oldest story in music: home, journey, return. Three chords, infinite versions.\"",
+  theory: "In any major key, the three most important chords are:\n• I chord: built on note 1 — home, stable\n• IV chord: built on note 4 — leaving, searching\n• V chord: built on note 5 — tension, yearning to return\n\nIn C major:\n• I = C major (C-E-G)\n• IV = F major (F-A-C)\n• V = G major (G-B-D)\n\nThese three chords appear in thousands of songs across every genre. 'Twist and Shout,' 'La Bamba,' all 12-bar blues, gospel, country — I-IV-V.",
+  pianoFocus: "Learn these 3 shapes: C (C-E-G), F (F-A-C), G (G-B-D). Practice moving slowly between them. Left hand: root notes (C, F, G). Right hand: full chord. Aim for smooth transitions before adding any speed.",
+  earTask: "Listen to any 12-bar blues or 'Let It Be' by The Beatles. Can you hear when the chord changes? Does it feel like 'leaving home' (IV) or 'wanting to get back' (V)? Train your ear to feel harmonic function.",
+  jamPrompt: "Play C → F → G → C slowly, 4 beats each. Loop it. Now improvise a melody over the top using only C D E G A. Start with just 2-3 notes per chord — simplicity IS sophistication. This is your first real improvisation.",
+  quiz: [{
+    q: "What are the I, IV, and V chords in C major?",
+    a: "I = C major, IV = F major, V = G major",
+    hint: "Count up C major scale: 1st, 4th, 5th notes."
+  }, {
+    q: "What emotional function does the V chord serve?",
+    a: "Tension — creates a strong pull back toward the I (home) chord.",
+    hint: "It's called the 'Dominant' — it wants to resolve."
+  }, {
+    q: "What notes make an F major chord?",
+    a: "F – A – C",
+    hint: "Build a triad on the 4th note of C major."
+  }, {
+    q: "Name the harmonic journey of I-IV-V-I.",
+    a: "Home → Journey → Tension → Resolution. The oldest story in Western music.",
+    hint: "Feel it: stable → leaving → yearning → arriving."
+  }],
+  pianoHL: ["C", "E", "G", "F", "A"],
+  scaleName: "C, F, G (I-IV-V)"
+}, {
+  week: 1,
+  day: 7,
+  title: "Week 1 Review — You Have a Foundation",
+  subtitle: "7 concepts, 7 days — now hear it all together",
+  collier: "\"Seek your own goosebumps. That's the practice. Everything else is just the map.\"",
+  theory: "You now know:\n1. The 12 notes and the piano keyboard\n2. Half steps and whole steps\n3. The major scale (W-W-H-W-W-W-H)\n4. The natural minor scale and relative minor\n5. How triads are built (Root-Third-Fifth)\n6. Major vs. minor quality (the third)\n7. I-IV-V progressions\n\nThis is a genuine foundation. Many musicians never learn this clearly. Jacob Collier says: the theory is the map, but the ear is the compass. This week you built the map.",
+  pianoFocus: "Play I-IV-V in C major fluidly for 5 minutes. Left hand: root notes. Right hand: full triads. Then add a simple rhythm — don't just hit chords, groove a little. Even a slight bounce changes everything.",
+  earTask: "Put on any song you love. Try to hear: is it major or minor? Can you find when it 'wants to go home' (that V→I feeling)? You're developing your inner ear — this is the most important skill in all of music.",
+  jamPrompt: "Open improv: C major, 5 minutes, no rules. Use C-D-E-G-A for your melody. Try: (1) a fast, busy melody, (2) a slow, spacious one where you hold notes, (3) start a phrase on G instead of C. Notice what gives you goosebumps. Follow that.",
+  quiz: [{
+    q: "What formula builds any major scale?",
+    a: "W–W–H–W–W–W–H",
+    hint: "Two, one, three whole steps — halves at positions 3-4 and 7-8."
+  }, {
+    q: "How do you find the relative minor of a major scale?",
+    a: "Start on the 6th note. C major's relative minor = A minor (A is the 6th note).",
+    hint: "C(1) D(2) E(3) F(4) G(5) A(6)."
+  }, {
+    q: "What's the difference between a major and minor triad?",
+    a: "One note: the third. Major = major 3rd (4 half steps). Minor = minor 3rd (3 half steps).",
+    hint: "Lower the middle note by a half step: major becomes minor."
+  }, {
+    q: "In C major, what are the I, IV, V chords?",
+    a: "C major (I), F major (IV), G major (V)",
+    hint: "Built on the 1st, 4th, and 5th notes of C major."
+  }],
+  pianoHL: ["C", "D", "E", "G", "A"],
+  scaleName: "C Major Pentatonic"
+}, {
+  week: 2,
+  day: 8,
+  title: "The Circle of Fifths",
+  subtitle: "Every key, chord, and modulation lives on this wheel",
+  collier: "\"I use the Circle of Fifths like a colour wheel. Clockwise gets brighter. Counter-clockwise gets darker. That's how I navigate light and shadow.\"",
+  theory: "The Circle of Fifths arranges all 12 keys in a circle. Each step clockwise = up a perfect fifth, adding one sharp. Each step counter-clockwise = adding one flat.\n\nClockwise from C:\nC → G → D → A → E → B → F♯ → D♭ → A♭ → E♭ → B♭ → F → back to C\n\nAdjacent keys share almost all the same notes — they sound related and blend naturally. Keys far apart create dramatic contrast. Jacob uses this as an emotional spectrum: C/G = bright, D♭/A♭ = rich and dark.",
+  pianoFocus: "Play C major scale, then G major scale. G major has one sharp: F♯. You just moved one step clockwise. Now D major has two sharps (F♯, C♯). Feel how each key has a slightly different colour — not just different, but richer.",
+  earTask: "Play a C major chord, then a G major chord. Hear how G feels 'related but slightly brighter'? That's a fifth relationship — the strongest harmonic bond in music. The circle of fifths is this relationship made visual.",
+  jamPrompt: "Play I-V-vi-IV in C major: C – G – Am – F. This is the most-used chord progression of the last 50 years ('Let It Be,' 'No Woman No Cry,' 'With or Without You,' hundreds more). Improvise over it for 3 minutes. Own this progression.",
+  quiz: [{
+    q: "What happens with each clockwise step on the Circle of Fifths?",
+    a: "You go up a perfect fifth AND add one sharp to the key signature.",
+    hint: "C→G (1♯), G→D (2♯), D→A (3♯)..."
+  }, {
+    q: "What are the first 4 keys clockwise from C?",
+    a: "G, D, A, E",
+    hint: "Up a fifth each time: C→G→D→A→E."
+  }, {
+    q: "How does Jacob Collier describe the Circle of Fifths?",
+    a: "As a light-to-dark colour spectrum — clockwise = brighter, counter-clockwise = darker.",
+    hint: "Like a colour wheel for harmony."
+  }, {
+    q: "Why do adjacent keys on the circle sound harmonically related?",
+    a: "They share almost all the same notes — moving one step changes only one note.",
+    hint: "C major and G major share 6 of 7 notes."
+  }],
+  pianoHL: ["C", "D", "E", "F", "G", "A", "B"],
+  scaleName: "C Major (Circle home)"
+}, {
+  week: 2,
+  day: 9,
+  title: "The 7 Diatonic Chords",
+  subtitle: "Every key has a built-in family of 7 chords",
+  collier: "\"Every key has its own family. Learn the family members — then watch how they talk to each other.\"",
+  theory: "Build a chord on every note of C major using only C major notes:\n\nI    — C major   (C-E-G)   bright, home\nii   — D minor   (D-F-A)   gentle, searching\niii  — E minor   (E-G-B)   introspective\nIV   — F major   (F-A-C)   warm, leaving\nV    — G major   (G-B-D)   tension, dominant\nvi   — A minor   (A-C-E)   bittersweet\nvii° — B dim     (B-D-F)   unstable, tense\n\nThe pattern is ALWAYS the same in every major key:\nMajor – minor – minor – Major – Major – minor – diminished",
+  pianoFocus: "Play each chord slowly across the keyboard: Cmaj(1-3-5), Dm(2-4-6), Em(3-5-7), Fmaj(4-6-1), Gmaj(5-7-2), Am(6-1-3), Bdim(7-2-4). White keys only. Each is a different colour in the same family.",
+  earTask: "Play I (C) then vi (Am) back and forth. They're closely related — almost the same mood but Am has more longing. They share two notes (C and E). This 'relative' relationship makes them interchangeable in many contexts.",
+  jamPrompt: "Try this progression: I–V–vi–IV (C–G–Am–F). Play it 8 times slowly. Then start from vi: vi–IV–I–V (Am–F–C–G). Same chords, different starting point. How does the emotional story change? One starts at home; one starts in longing.",
+  quiz: [{
+    q: "What is the chord quality pattern for every major key?",
+    a: "Major–minor–minor–Major–Major–minor–diminished (I–ii–iii–IV–V–vi–vii°)",
+    hint: "Capitals = major, lowercase = minor."
+  }, {
+    q: "In C major, what chord is built on D?",
+    a: "D minor (the ii chord): D – F – A",
+    hint: "Build a triad on D using only C major notes."
+  }, {
+    q: "What is a diminished chord?",
+    a: "A triad with a minor third AND a diminished fifth — both intervals compressed, creating instability.",
+    hint: "B-D-F in C major: very tense, needs to resolve."
+  }, {
+    q: "Which two diatonic chords share the most notes with C major (I)?",
+    a: "Am (vi) shares C and E. Em (iii) shares E and G.",
+    hint: "Look for common tones between I and its relatives."
+  }],
+  pianoHL: ["C", "D", "E", "F", "G", "A", "B"],
+  scaleName: "C Major — 7 chords"
+}, {
+  week: 2,
+  day: 10,
+  title: "Chord Functions — Home, Away, Return",
+  subtitle: "Tonic, Subdominant, Dominant: the engine of all Western music",
+  collier: "\"Tension and release is the heartbeat. The V chord is a held breath. The I chord is the exhale.\"",
+  theory: "Every diatonic chord has a harmonic function:\n\n• TONIC (stable, home): I, iii, vi\n• SUBDOMINANT (moving away): IV, ii  \n• DOMINANT (tension, wants to return): V, vii°\n\nThe fundamental story of Western music:\nTonic → Subdominant → Dominant → Tonic\n= Home → Journey → Tension → Resolution\n\nJacob Collier's genius is playing with this expectation — delaying resolution, substituting chords, resolving somewhere unexpected. But first, deeply feel the basic version.",
+  pianoFocus: "Play C → F → G → C over and over, very slow. On the G chord, PAUSE — hold it, feel the pull back to C. That yearning IS the dominant chord. Don't rush to resolve it. Let the tension breathe before the exhale.",
+  earTask: "Listen to Beethoven's 'Ode to Joy' or any simple melody. Can you hear the moments of rest (Tonic) and tension (Dominant)? This push-pull is the engine — once you feel it, you hear it in every piece of music ever written.",
+  jamPrompt: "Advanced: play i→iv→V→i in A minor: Am – Dm – E – Am. The E major chord has a G♯ — not in A minor naturally. But it creates an even stronger pull back to Am (it's the harmonic minor). Play it slowly and feel why that G♯ intensifies the resolution.",
+  quiz: [{
+    q: "What are the three harmonic functions?",
+    a: "Tonic (stable/home), Subdominant (moving away), Dominant (tension/wanting resolution)",
+    hint: "Where you are, where you're going, the moment before you arrive."
+  }, {
+    q: "Which diatonic chords serve a Tonic function?",
+    a: "I, iii, and vi — they all feel stable and 'at home'.",
+    hint: "They share the most notes with the I chord."
+  }, {
+    q: "Why does the V chord want to resolve to I?",
+    a: "The V7 contains a tritone (between the 4th and 7th scale degrees) that creates maximum tension — it resolves inward to I.",
+    hint: "In G7: B wants to rise to C, F wants to fall to E."
+  }, {
+    q: "What is the difference between IV and ii harmonically?",
+    a: "Both are Subdominant — IV is warmer/simpler, ii is jazzier — but same function, so they can substitute for each other.",
+    hint: "ii can replace IV because they share 2 of 3 notes."
+  }],
+  pianoHL: ["G", "B", "D", "F"],
+  scaleName: "G7 — The Dominant"
+}, {
+  week: 2,
+  day: 11,
+  title: "7th Chords — Where Harmony Gets Its Soul",
+  subtitle: "Add one note, transform the entire feeling",
+  collier: "\"The 7th is where a chord stops being furniture and starts being a character.\"",
+  theory: "7th chords add a 4th note to a triad. Four essential types:\n\n• Major 7th (Maj7): C-E-G-B — dreamy, floating\n• Dominant 7th (7): C-E-G-B♭ — bluesy, tense, restless\n• Minor 7th (m7): C-E♭-G-B♭ — smooth, jazzy\n• Half-diminished (ø7): B-D-F-A — dark, unsettled\n\nCompare Cmaj7 (heavenly) to C7 (itchy, needs to go somewhere). One note — B vs B♭ — creates two completely different emotional universes. This is the level of detail Jacob Collier works at.",
+  pianoFocus: "Start with Cmaj7: C-E-G-B. Hold it. Now lower the B to B♭ — that's C7. Back and forth slowly. Feel the shift from 'arrived and floating' to 'restless and needing to go'. Practice both shapes until each feels natural under your fingers.",
+  earTask: "Listen to Stevie Wonder's 'Isn't She Lovely' or Bill Withers' 'Ain't No Sunshine.' These are drenched in 7th chords. Try to hear the 'extra colour' — that slightly sophisticated, unresolved feeling that makes you lean in.",
+  jamPrompt: "Play a slow ii-V-I in C: Dm7 → G7 → Cmaj7. That's D-F-A-C → G-B-D-F → C-E-G-B. Hold each chord 4 beats. This is the foundation of jazz. Improvise a gentle melody using C D E F G A — let the 7th chord richness be the canvas.",
+  quiz: [{
+    q: "What 4 notes make a Cmaj7?",
+    a: "C – E – G – B (major triad + major 7th)",
+    hint: "C major triad (C-E-G) plus B."
+  }, {
+    q: "What 4 notes make a C7 (dominant 7th)?",
+    a: "C – E – G – B♭ (major triad + minor 7th)",
+    hint: "C major triad plus B♭ — one half step lower than B."
+  }, {
+    q: "What is the emotional character of a major 7th chord?",
+    a: "Dreamy, floating, lush — resolved but with added sophistication.",
+    hint: "Cmaj7 sounds like a deep breath of fresh, open air."
+  }, {
+    q: "What is the emotional character of a dominant 7th chord?",
+    a: "Tense, bluesy, restless — the most harmonically active chord.",
+    hint: "G7 desperately wants to go home to C."
+  }],
+  pianoHL: ["C", "E", "G", "B"],
+  scaleName: "Cmaj7 (C-E-G-B)"
+}, {
+  week: 2,
+  day: 12,
+  title: "The ii – V – I — Jazz's Heartbeat",
+  subtitle: "The single most important progression in all of jazz",
+  collier: "\"The ii-V-I is a complete sentence. Learn to speak it in every key and you can talk to any musician on earth.\"",
+  theory: "The ii-V-I uses three chords moving through the Circle of Fifths:\n\nIn C major:\nDm7 (ii7) → G7 (V7) → Cmaj7 (Imaj7)\n\nWhy it works: each chord's root moves down a fifth (D→G→C) — the strongest harmonic motion. The G7 contains a tritone (F and B) that resolves beautifully: F falls to E, B rises to C.\n\nWith 7th chords:\n• Dm7: D-F-A-C\n• G7: G-B-D-F\n• Cmaj7: C-E-G-B\n\nVoice leading in action: G7's F falls to Cmaj7's E. G7's B rises to Cmaj7's C. Perfect resolution.",
+  pianoFocus: "Practice Dm7→G7→Cmaj7 slowly. Left hand: root notes D-G-C. Right hand: full 7th chords. Once comfortable, add a gentle swing feel — let the G7 linger just a moment before resolving. Let the tension breathe.",
+  earTask: "Listen to Miles Davis 'So What' or Bill Evans 'Waltz for Debby.' ii-V-I is everywhere in jazz. Try to hear each chord's personality: Dm7 = smooth transition, G7 = the tension peak, Cmaj7 = arrival and rest. Three emotional states in one sentence.",
+  jamPrompt: "Play ii-V-I in F major too: Gm7 → C7 → Fmaj7. Same motion, new key. Over each chord, try: D Dorian scale over Dm7, G Mixolydian over G7, C major scale over Cmaj7. You're changing your melodic colour to match the harmony.",
+  quiz: [{
+    q: "What are the three chords in a ii-V-I in C major?",
+    a: "Dm7 → G7 → Cmaj7",
+    hint: "Built on the 2nd, 5th, and 1st degrees of C major."
+  }, {
+    q: "What notes make up G7?",
+    a: "G – B – D – F",
+    hint: "G major triad (G-B-D) plus the minor 7th (F)."
+  }, {
+    q: "Why does the ii-V-I sound so resolved?",
+    a: "The roots move by descending fifths (D→G→C) — the strongest harmonic motion, following the circle of fifths.",
+    hint: "Each root falls a fifth to the next."
+  }, {
+    q: "What is the ii-V-I in F major?",
+    a: "Gm7 → C7 → Fmaj7",
+    hint: "Find the 2nd, 5th, 1st notes of F major: G, C, F."
+  }],
+  pianoHL: ["D", "F", "A", "C"],
+  scaleName: "Dm7 (D-F-A-C)"
+}, {
+  week: 2,
+  day: 13,
+  title: "Chord Substitution — Reharmonisation Basics",
+  subtitle: "Jacob's first superpower: changing the chords under a melody",
+  collier: "\"Reharmonisation is finding the hidden version of a song that was always there, waiting to be heard.\"",
+  theory: "Reharmonisation replaces chords with alternatives that share harmonic function:\n\n1. RELATIVE SUBSTITUTION: Replace I with vi, or IV with ii (share 2 of 3 notes).\n   C → Am (both tonic function)\n   F → Dm (both subdominant function)\n\n2. TRITONE SUBSTITUTION: Replace V7 with a dominant 7th a tritone away.\n   G7 → D♭7 (both resolve to C, share the same tritone: F and B)\n\n3. BORROWED CHORDS: Use chords from the parallel minor for colour.\n   In C major, borrow Fm (iv) from C minor — that A♭ creates beautiful darkness.",
+  pianoFocus: "Try reharmonising C-F-G-C in two ways: (1) Am-Dm-G-C (relative substitution — same function, different colour). (2) C-F-D♭7-C (tritone sub on the V — the D♭7 is a chromatic surprise that still resolves to C). Same melody, three emotional versions.",
+  earTask: "Listen to Jacob Collier's arrangement of any simple song. Notice how the harmony keeps shifting under the melody — that constant recolouring is reharmonisation. The melody is the constant; harmony is the light it's lit by.",
+  jamPrompt: "Take the melody of 'Happy Birthday' (C-C-D-C-F-E...). Play it first with C-F-G. Then try: Cmaj7-Fmaj7-G7sus4. Then: Am-Dm7-G7-Cmaj7. Same melody, three completely different emotional stories. This is why Jacob can transform any song.",
+  quiz: [{
+    q: "What is reharmonisation?",
+    a: "Replacing chords with alternatives that serve the same harmonic function but create different emotional colour.",
+    hint: "The melody stays — harmony changes the story."
+  }, {
+    q: "What is relative substitution?",
+    a: "Replacing I with vi, or IV with ii — they share 2 notes and the same harmonic function.",
+    hint: "C major and Am share E and G. F major and Dm share F and A."
+  }, {
+    q: "What is tritone substitution?",
+    a: "Replacing a V7 chord with a dominant 7th whose root is a tritone (6 half steps) away.",
+    hint: "G7 and D♭7 share the same tritone: F and B (=C♭)."
+  }, {
+    q: "What is a borrowed chord?",
+    a: "A chord taken from the parallel minor key — in C major, borrowing from C minor for darker colour.",
+    hint: "Fm in a C major song: that A♭ creates beautiful bittersweet colour."
+  }],
+  pianoHL: ["C", "E", "G", "A"],
+  scaleName: "C and Am — Relative"
+}, {
+  week: 2,
+  day: 14,
+  title: "Week 2 Review — Harmony is Your Canvas",
+  subtitle: "From simple chords to the language of jazz",
+  collier: "\"The more you explore harmony, the more you'll hear. And the more you hear, the more you improve. It never ends.\"",
+  theory: "Week 2 achievements:\n✓ Circle of Fifths — the master map\n✓ 7 diatonic chords and their functions\n✓ Tonic / Subdominant / Dominant\n✓ 7th chords (Maj7, dom7, m7)\n✓ The ii-V-I progression\n✓ Chord substitution and reharmonisation\n\nYou now understand harmony at the level most musicians spend years reaching. Jacob Collier's entire harmonic language is built on exactly these foundations — pushed to extraordinary extremes of colour and complexity.",
+  pianoFocus: "Play ii-V-I in three keys: C (Dm7-G7-Cmaj7), F (Gm7-C7-Fmaj7), G (Am7-D7-Gmaj7). Aim for smooth voice leading — let notes move as little as possible between chords. Left hand: root notes. Right hand: colour tones (7ths, 3rds).",
+  earTask: "Pick any song you know well. Sit at the piano and try to find the chords by ear. Start with the bass note (the root) and work outward. Getting even 50% right is enormous growth. This is exactly how Jacob learned — by ear, always.",
+  jamPrompt: "Create your own 4-chord progression using diatonic chords of C major. Write it down. Play it 20 times until it feels like yours. Improvise over it with C D E F G A. Record it on your phone. Listen back with fresh ears — you wrote something original.",
+  quiz: [{
+    q: "Name the 7 diatonic chord qualities in order for any major key.",
+    a: "Major–minor–minor–Major–Major–minor–diminished (I–ii–iii–IV–V–vi–vii°)",
+    hint: "First, fourth, fifth are Major. Second, third, sixth are minor. Seventh is diminished."
+  }, {
+    q: "What is the ii-V-I in G major?",
+    a: "Am7 → D7 → Gmaj7",
+    hint: "Find the 2nd, 5th, 1st notes of G major: A, D, G."
+  }, {
+    q: "Describe voice leading in a ii-V-I.",
+    a: "Notes move by the smallest possible interval between chords — common tones stay, others move by half or whole step.",
+    hint: "Dm7→G7: the C in Dm7 becomes B in G7 (half step down). Smooth."
+  }, {
+    q: "What is the emotional difference between Cmaj7 and Am7?",
+    a: "Both are tonic function, but Cmaj7 feels brightly resolved while Am7 feels bittersweet and introspective.",
+    hint: "One is the major home; the other is the minor relative."
+  }],
+  pianoHL: ["A", "C", "E", "G"],
+  scaleName: "Am7 (A-C-E-G)"
+}, {
+  week: 3,
+  day: 15,
+  title: "Rhythm — The Other Half of Music",
+  subtitle: "Jacob treats rhythm as harmonically as harmony itself",
+  collier: "\"Rhythm is just as harmonic as harmony. Every subdivision is a different colour. Groove lives in the spaces between notes.\"",
+  theory: "Rhythm is time organised into patterns:\n\n• Beat: the steady pulse (what you tap your foot to)\n• Meter: how beats group (4/4 = 4 beats; 3/4 = 3 beats)\n• Subdivision: dividing each beat into smaller units\n  - Quarter notes: 1 per beat\n  - Eighth notes: 2 per beat (1-and)\n  - Sixteenth notes: 4 per beat (1-e-and-a)\n  - Triplets: 3 per beat (1-and-a)\n\nGroove comes from WHERE you place notes relative to the beat. On it, just before (rushing), or just after (laying back) — those tiny differences create entirely different feels.",
+  pianoFocus: "Clap a steady beat. Now play a C chord on beat 1, then again on the 'and' of beat 2 (between beats 2 and 3). That offbeat placement is syncopation — the heartbeat of groove. Even a simple chord gains personality with rhythmic displacement.",
+  earTask: "Listen to James Brown, Stevie Wonder, or Jacob Collier's 'With the Love in My Heart.' Count the beat (1-2-3-4). Then feel where the accents fall — often NOT on beats 1 and 3. That displaced accent is where the groove actually lives.",
+  jamPrompt: "Play Am-F-C-G (4 beats each, simple). Now try: hit each chord on beat 1, let it ring, then hit it again on 'the and of 2.' Same chords, completely different feel. Rhythm transforms harmony without changing a single note.",
+  quiz: [{
+    q: "What is syncopation?",
+    a: "Placing rhythmic emphasis on 'weak' beats or between beats — the backbone of groove.",
+    hint: "Instead of 1-2-3-4, accent the 'ands': 1-AND-2-AND."
+  }, {
+    q: "What is the difference between 4/4 and 3/4 time?",
+    a: "4/4 has 4 beats per bar (common time). 3/4 has 3 beats per bar (waltz feel).",
+    hint: "Count 4/4: 1-2-3-4. Count 3/4: 1-2-3, 1-2-3."
+  }, {
+    q: "What does 'laying back' mean rhythmically?",
+    a: "Placing notes slightly AFTER the beat — creates a relaxed, deep groove feel.",
+    hint: "The opposite of rushing. Think of a deep, slow exhale."
+  }, {
+    q: "What is a sixteenth note subdivision?",
+    a: "Dividing each beat into 4 equal parts: 1-e-and-a, 2-e-and-a, 3-e-and-a, 4-e-and-a.",
+    hint: "Twice as fast as eighth notes."
+  }],
+  pianoHL: ["C", "E", "G"],
+  scaleName: "C major — rhythmic focus"
+}, {
+  week: 3,
+  day: 16,
+  title: "Modes — 7 Worlds From One Scale",
+  subtitle: "Start the major scale from a different note — enter a new universe",
+  collier: "\"Super-Ultra-Hyper-Mega-Meta Lydian! Every step on that scale is a different world — a different room in the same house.\"",
+  theory: "Modes are generated by starting C major from each of its 7 notes:\n\n1. C Ionian   = C major       bright, foundational\n2. D Dorian   D-E-F-G-A-B-C   jazzy, soulful minor ✨\n3. E Phrygian E-F-G-A-B-C-D   dark, Spanish, dramatic\n4. F Lydian   F-G-A-B-C-D-E   floating, ethereal ✨ (Jacob's favourite)\n5. G Mixolydian G-A-B-C-D-E-F bluesy, rock\n6. A Aeolian  = A natural minor bittersweet, natural\n7. B Locrian  B-C-D-E-F-G-A   dissonant, rare\n\nSame 7 notes. 7 completely different emotional worlds.",
+  pianoFocus: "White keys from C to C = Ionian (bright). White keys from F to F = Lydian — notice the B♮ instead of B♭, that raised 4th creates the 'float'. White keys from D to D = Dorian — minor but with raised 6th (B♮), giving it jazz warmth.",
+  earTask: "Play F Lydian (F-G-A-B-C-D-E-F) and hover on the B natural. That note creates the Lydian's signature floating quality — it's the 'magic note'. Jacob says Lydian is where harmony lifts off the earth. Can you feel it?",
+  jamPrompt: "Improvise in F Lydian over an Fmaj7 chord. Dwell on the B natural — let it hang. Then try D Dorian over Dm7: D-E-F-G-A-B-C. Feel the jazz warmth of that B♮ in minor territory. Two modes, two completely different minor/major worlds.",
+  quiz: [{
+    q: "What makes Lydian mode distinctive?",
+    a: "A raised 4th (♯4) — in F Lydian, B♮ instead of B♭. Creates floating, ethereal, otherworldly sound.",
+    hint: "The raised 4th is the 'magic note' that lifts Lydian."
+  }, {
+    q: "What makes Mixolydian distinctive?",
+    a: "A lowered 7th (♭7) — like major but with a blue note. G Mixolydian: F♮ instead of F♯.",
+    hint: "G Mixolydian = G major scale but with F instead of F♯."
+  }, {
+    q: "How does Dorian differ from natural minor?",
+    a: "Dorian has a raised 6th — in D Dorian, B♮ instead of B♭. This creates a warmer, jazzier quality.",
+    hint: "The raised 6th is what makes Dorian feel soulful rather than sad."
+  }, {
+    q: "Which mode is Jacob Collier's favourite 'bright' mode?",
+    a: "Lydian — its raised 4th creates that floating, ethereal quality he describes as 'lifting off the earth'.",
+    hint: "'Super-Ultra-Hyper-Mega-Meta Lydian!'"
+  }],
+  pianoHL: ["F", "G", "A", "B", "C", "D", "E"],
+  scaleName: "F Lydian (♯4 = B♮)"
+}, {
+  week: 3,
+  day: 17,
+  title: "Pentatonic Scales — The Universal Language",
+  subtitle: "5 notes that sound beautiful over almost anything",
+  collier: "\"The pentatonic is what all humans share. It transcends culture, era, style. It's music's native tongue.\"",
+  theory: "The pentatonic scale removes the two most 'tense' notes (the 4th and 7th) from the major scale:\n\nC major pentatonic: C – D – E – G – A\n(Removed F and B — the half-step resolution notes)\n\nA minor pentatonic: A – C – D – E – G\n(Same 5 notes — relative relationship again!)\n\nWhy this is perfect for improvisation: over a I-IV-V (C-F-G), every single pentatonic note works beautifully. There are NO wrong notes. This is where Jacob Collier, Stevie Wonder, Jimi Hendrix, and every blues legend starts.",
+  pianoFocus: "Play C-D-E-G-A (skip F and B). This is your safe zone — any of these 5 notes sounds great over C, F, or G chords. Explore freely. Now play A-C-D-E-G (A minor pentatonic). Same 5 notes — feel the minor flavour of starting on A.",
+  earTask: "The intro to 'My Girl,' the verse of 'Isn't She Lovely,' the solo in 'Johnny B. Goode' — all pentatonic. Listen to any of these and trace the 5-note shape. Once you hear pentatonic, you'll identify it in virtually every genre.",
+  jamPrompt: "Set Am-F-C-G looping. Improvise using ONLY A-C-D-E-G (A minor pentatonic) for 5 full minutes. Start simple — 2 or 3 notes per phrase. Leave space. Let silence be part of your melody. Jacob: 'What you DON'T play is as important as what you do.'",
+  quiz: [{
+    q: "What 5 notes make C major pentatonic?",
+    a: "C – D – E – G – A (remove F and B from C major)",
+    hint: "Remove the 4th and 7th scale degrees."
+  }, {
+    q: "Why is the pentatonic ideal for improvisation?",
+    a: "All 5 notes sound good over I-IV-V chords — there are no 'avoid' notes.",
+    hint: "F and B were the tension notes; removing them leaves only consonant tones."
+  }, {
+    q: "What is the relationship between C major pentatonic and A minor pentatonic?",
+    a: "They use the exact same 5 notes — just starting from different roots (relative relationship).",
+    hint: "C-D-E-G-A and A-C-D-E-G: same notes, different tonic."
+  }, {
+    q: "What does Jacob Collier say about silence in improvisation?",
+    a: "What you DON'T play is as important as what you do — space and rest are active musical choices.",
+    hint: "Think of breathing — the rest between notes is the breath."
+  }],
+  pianoHL: ["C", "D", "E", "G", "A"],
+  scaleName: "C Major Pentatonic"
+}, {
+  week: 3,
+  day: 18,
+  title: "Voice Leading — The Art of Smooth Movement",
+  subtitle: "How individual notes tell their own stories between chords",
+  collier: "\"Voice leading is about each voice having its own journey. The chords aren't furniture — each note inside them is a character.\"",
+  theory: "Voice leading: moving each chord tone to the nearest available note in the next chord.\n\nC major → F major (rough voice leading):\nC-E-G → F-A-C (all three notes jump)\n\nC major → F major (smooth voice leading):\nC-E-G → C-F-A (C stays as a common tone! E moves up to F, G moves up to A)\n\nThe held note (C) is a COMMON TONE — shared between both chords. Recognising common tones and moving other voices by the smallest interval makes chord changes sound smooth and inevitable.",
+  pianoFocus: "Play C major (C-E-G), then F major keeping C in place — only move E up to F, G up to A. Play it both ways (all jumping vs. smooth) and hear the difference. The smooth version sounds professional and intentional. It sounds like you know what you're doing — because you do.",
+  earTask: "Listen to a Bach chorale or any Jacob Collier vocal arrangement. Notice how each voice moves smoothly, often by just one step. The bass might jump, but inner voices glide. This is the sound of expert voice leading — it makes harmony feel inevitable.",
+  jamPrompt: "Play this smooth voice-led progression: Cmaj7 (C-E-G-B) → Am7 (A-E-G-C) → Fmaj7 (F-E-A-C) → G7 (F-D-G-B). Notice: the note E appears in the first three chords! That common tone creates continuity. Track each note's journey — this is how Jacob thinks.",
+  quiz: [{
+    q: "What is voice leading?",
+    a: "Moving each note of a chord to the nearest available note in the next chord — minimising jumps.",
+    hint: "Each 'voice' is a note that tells its own melodic story."
+  }, {
+    q: "What is a common tone?",
+    a: "A note shared between two consecutive chords — it stays in place, requiring no movement.",
+    hint: "C appears in both C major (C-E-G) and F major (F-A-C)."
+  }, {
+    q: "In smooth voice leading from C to Am, what stays and what moves?",
+    a: "C-E-G → A-C-E: rearranged for smooth leading, keep C and E, move G to... A (up a whole step, or rearrange so E stays, C drops).",
+    hint: "Find the common tones first, then move the others by the smallest interval."
+  }, {
+    q: "Why does Jacob Collier emphasise voice leading?",
+    a: "It creates smooth, singing harmonic movement — 'each voice has its own journey' — making chord changes feel inevitable and beautiful.",
+    hint: "Think of it as 4-part harmony where each part is a singer."
+  }],
+  pianoHL: ["C", "E", "G", "B"],
+  scaleName: "Cmaj7 voice leading"
+}, {
+  week: 3,
+  day: 19,
+  title: "Ear Training — Interval Recognition",
+  subtitle: "Naming what you already feel",
+  collier: "\"Your ear is the instrument. The piano is just a tool to tune it.\"",
+  theory: "Every interval has a characteristic sound — and a song to help you remember it:\n\n• Minor 2nd (1 hs):   'Jaws' theme (dun-dun)\n• Major 2nd (2 hs):   'Happy Birthday' (first two notes)\n• Minor 3rd (3 hs):   'Smoke on the Water' riff\n• Major 3rd (4 hs):   'When the Saints Go Marching In'\n• Perfect 4th (5 hs): 'Here Comes the Bride'\n• Tritone (6 hs):     'The Simpsons' theme\n• Perfect 5th (7 hs): 'Star Wars' theme\n• Major 6th (9 hs):   'My Way' (Sinatra)\n• Major 7th (11 hs):  'Take On Me' (A-Ha)\n• Octave (12 hs):     'Somewhere Over the Rainbow'",
+  pianoFocus: "Play interval pairs slowly: C+C♯ (minor 2nd — tense). C+D (major 2nd). C+E♭ (minor 3rd — minor mood). C+E (major 3rd — major mood). C+G (perfect 5th — open, strong). C+B (major 7th — dreamlike tension). Feel each in your body, not just your ears.",
+  earTask: "Close your eyes. Play two notes and try to identify the interval by feeling before thinking. Start easy: perfect 5th (C+G) vs minor 3rd (C+E♭). Over time, your ear will name intervals before your brain does — that's real musicianship.",
+  jamPrompt: "Melodic interval exploration: improvise a short 4-note melody that starts with a major 3rd leap, then moves by step. Then try one starting with a perfect 5th. Then a minor 3rd. Each interval creates different melodic momentum — larger leaps create drama, small steps create flow.",
+  quiz: [{
+    q: "How many half steps is a perfect 5th?",
+    a: "7 half steps (e.g., C to G)",
+    hint: "Count: C-C♯-D-D♯-E-F-F♯-G = 7 steps."
+  }, {
+    q: "What song helps you remember the perfect 4th?",
+    a: "'Here Comes the Bride' — the first two notes span a perfect 4th.",
+    hint: "Also: 'Amazing Grace' opening interval."
+  }, {
+    q: "What interval is called the 'tritone'?",
+    a: "6 half steps — exactly half an octave. The most dissonant interval.",
+    hint: "'The Simpsons' theme. Also the interval inside every dominant 7th chord."
+  }, {
+    q: "How many half steps is a major 3rd?",
+    a: "4 half steps (e.g., C to E)",
+    hint: "The interval that defines a major chord's bright sound."
+  }],
+  pianoHL: ["C", "G"],
+  scaleName: "Perfect 5th (C-G)"
+}, {
+  week: 3,
+  day: 20,
+  title: "The Blues Scale & Blue Notes",
+  subtitle: "The raw emotional vocabulary of blues, jazz and rock",
+  collier: "\"The blue note lives in the crack between keys. It's the note that makes you feel something you can't name.\"",
+  theory: "The blues scale adds one note to the minor pentatonic: the ♭5 (tritone), called the 'blue note':\n\nA minor pentatonic: A – C – D – E – G\nA blues scale:       A – C – D – E♭ – E – G\n\nThat E♭ (or D♯) squeezed between D and E is the blue note. It creates a bending, wailing quality — the signature sound of blues and jazz.\n\nChromaticism — using notes outside the key as passing tones — is how Jacob connects chords smoothly. The blue note is the most famous chromatic passing tone in all of music.",
+  pianoFocus: "Play A blues scale: A-C-D-Eb-E-G. The Eb sits between D and E. Play D-Eb-E as a fast triplet — that's the blues 'curl.' Improvise over Am7 using this scale. Linger on that Eb — let it feel raw and honest.",
+  earTask: "Listen to B.B. King, Ray Charles, or the piano intro of 'Georgia On My Mind.' The wailing, slightly 'wrong' note that somehow sounds perfect — that's the blue note. It lives between the cracks of the piano, in the space between major and minor.",
+  jamPrompt: "Blue note challenge: improvise over Am-Dm-E7-Am using A blues scale. Focus on approaching the blue note (Eb) from below (D) — that upward slide is the blues gesture. Record yourself. Listen back — does it feel raw and honest? That's the whole point.",
+  quiz: [{
+    q: "What note is added to minor pentatonic to create the blues scale?",
+    a: "The ♭5 (diminished 5th / tritone) — called the 'blue note'.",
+    hint: "In A: it's E♭, squeezed between D and E."
+  }, {
+    q: "What is the A blues scale?",
+    a: "A – C – D – E♭ – E – G",
+    hint: "A minor pentatonic (A-C-D-E-G) plus the ♭5 (E♭)."
+  }, {
+    q: "What is a chromatic passing tone?",
+    a: "A note outside the key used to connect two chord tones smoothly — it 'passes through' on the way.",
+    hint: "The blue note E♭ passes between D and E chromatically."
+  }, {
+    q: "What emotional quality does the blue note create?",
+    a: "A wailing, bending, raw quality — expressing something between major and minor, perfectly imperfect.",
+    hint: "It lives 'in the crack between keys' — too expressive for either major or minor alone."
+  }],
+  pianoHL: ["A", "C", "D", "E", "G"],
+  scaleName: "A Blues (A-C-D-Eb-E-G)"
+}, {
+  week: 3,
+  day: 21,
+  title: "Week 3 Review — Rhythm, Modes & Melodic Thinking",
+  subtitle: "You're thinking like a musician, not just a theorist",
+  collier: "\"Exploration IS the practice. The information follows the feeling, always.\"",
+  theory: "Week 3 achievements:\n✓ Rhythm — subdivision, syncopation, groove\n✓ All 7 modes and their emotional characters\n✓ Pentatonic scales — the universal melodic language\n✓ Voice leading — smooth harmonic movement\n✓ Interval recognition — naming what you feel\n✓ Blues scale — the raw emotional vocabulary\n\nYou now think melodically AND harmonically. A note doesn't just belong to a chord — it has direction, function, and feeling. This is how Jacob Collier hears.",
+  pianoFocus: "Modal tour: 4 bars of each over these drones. F Lydian (over F). D Dorian (over Dm7). G Mixolydian (over G7). A Aeolian (over Am). Notice: same 7 notes, four completely different emotional worlds. That's the power of modal thinking.",
+  earTask: "Put on a song and try to identify: is the melody using pentatonic, blues scale, or a full 7-note scale? You'll often hear pentatonic in verses and blues notes at emotional peaks. Your ear is getting sophisticated — trust these observations.",
+  jamPrompt: "Grand improvisation: Am-F-C-G, 10 minutes, no rules. First 3 min: only pentatonic. Next 3 min: add the blue note (E♭). Final 4 min: full A natural minor scale AND try raising F to F♯ (Dorian). Document what you discover — you're doing original musical research.",
+  quiz: [{
+    q: "What mode pairs naturally over a minor 7th chord?",
+    a: "Dorian — same chord tones (1-♭3-5-♭7) plus the raised 6th for warmth.",
+    hint: "Dm7 + D Dorian scale = smooth jazz territory."
+  }, {
+    q: "What mode pairs naturally over a dominant 7th chord?",
+    a: "Mixolydian — contains the same tones (1-3-5-♭7) as a dominant chord.",
+    hint: "G7 + G Mixolydian = bluesy rock feeling."
+  }, {
+    q: "What is the difference between A minor and A Dorian?",
+    a: "A Dorian has F♯ instead of F natural — the raised 6th creates a warmer, more sophisticated minor feel.",
+    hint: "One note (F vs F♯) separates Aeolian from Dorian."
+  }, {
+    q: "Name Jacob Collier's core principle about emotion vs theory.",
+    a: "Feel first, name later. 'Exploration is the practice — information follows feeling, always.'",
+    hint: "His mother asked 'what does that note feel like?' not 'what note is that?'"
+  }],
+  pianoHL: ["A", "B", "C", "D", "E", "F", "G"],
+  scaleName: "A Minor / Dorian"
+}, {
+  week: 4,
+  day: 22,
+  title: "Extended Chords — 9ths, 11ths, 13ths",
+  subtitle: "The lush, cinematic palette of jazz harmony",
+  collier: "\"Every note you add tells a different version of the same story. The 9th says: 'and also.' The 13th says: 'the whole world.'\"",
+  theory: "Beyond 7th chords, stack more thirds:\n\nCmaj9:   C-E-G-B-D    (add the 9th)\nCmaj11:  C-E-G-B-D-F  (add the 11th)\nCmaj13:  C-E-G-B-D-A  (add the 13th)\n\nYou don't need all notes — choose the colour you want:\n• 9th: richness without density\n• 13th: full orchestral lushness\n• Omit the 5th (G) to reduce thickness\n• Omit the 11th (F) in major to avoid clash with the 3rd (E)\n\nThis is how Jacob Collier builds those shimmering, dense harmonies that float in space.",
+  pianoFocus: "Cmaj9 spread voicing: left hand C-G, right hand B-D-E. That separation between bass and colour tones is how jazz pianists voice extended chords. The D on top (the 9th) adds richness without muddiness. Let it ring and feel the difference from Cmaj7.",
+  earTask: "Listen to Bill Evans 'Peace Piece' or Herbie Hancock 'Maiden Voyage.' Those shimmering dense chords are extended harmonies. Notice how they feel rich but not muddy — that's careful voicing. Each note chosen for maximum colour with minimum thickness.",
+  jamPrompt: "Replace simple chords with extended versions: instead of C-Am-F-G, play Cmaj9-Am9-Fmaj9-G13. Play very slowly. Each chord is now a world. Improvise with C major pentatonic over the top — the melody will float over the rich harmonic canvas.",
+  quiz: [{
+    q: "What notes make a Cmaj9?",
+    a: "C – E – G – B – D (major triad + major 7th + major 9th)",
+    hint: "Cmaj7 (C-E-G-B) plus D."
+  }, {
+    q: "What is the 9th of a chord?",
+    a: "The 2nd scale degree played an octave higher — adds richness without changing the chord's fundamental quality.",
+    hint: "In C: the 9th is D (one octave above the low D)."
+  }, {
+    q: "Why do jazz pianists often omit the 5th in extended chords?",
+    a: "The 5th adds thickness but little colour — removing it makes room for richer extensions like the 9th and 13th.",
+    hint: "The 5th is the 'neutral' note — other tones do more emotional work."
+  }, {
+    q: "What does a 13th chord theoretically contain?",
+    a: "All 7 notes of the scale stacked in thirds: Root-3-5-7-9-11-13.",
+    hint: "The whole major scale voiced as one chord — maximum richness."
+  }],
+  pianoHL: ["C", "E", "G", "B", "D"],
+  scaleName: "Cmaj9 (C-E-G-B-D)"
+}, {
+  week: 4,
+  day: 23,
+  title: "Borrowed Chords — Raiding the Parallel Minor",
+  subtitle: "The bittersweet magic of modal mixture",
+  collier: "\"I borrow from parallel worlds. Every major key has a twin in minor. I visit it often — the shadows are beautiful.\"",
+  theory: "Modal mixture: using chords from the parallel minor in a major key context.\n\nC major borrows from C minor:\n• iv  (Fm: F-A♭-C)  — the most common borrowed chord\n• ♭VII (B♭ major)   — warm, rock feel\n• ♭VI  (A♭ major)   — rich, cinematic\n• ♭III (E♭ major)   — dreamy departure\n\nThe ♭VI-♭VII-I progression (A♭-B♭-C) is one of the most powerful in rock and pop — used in countless power ballads. The borrowed A♭ is the signature colour of this technique — the note that says 'we've briefly left home for the shadow world.'",
+  pianoFocus: "Play C-Am-F-G (normal). Now replace F with Fm: C-Am-Fm-G. Hear that A♭ in the Fm? That one borrowed note changes the emotional colour dramatically — from bright to bittersweet. This is modal mixture. One note, new universe.",
+  earTask: "Listen to The Beatles' 'Blackbird' (uses ♭VII), Pink Floyd's 'Comfortably Numb' (♭VI-♭VII-I), or Jacob Collier's 'In My Room.' Listen for moments where the harmony suddenly gets darker or more cinematic — that's a borrowed chord visiting from the parallel minor.",
+  jamPrompt: "Create a 4-chord loop using at least one borrowed chord: try C-Fm-G-C, or Am-F-Fm-C, or C-A♭-B♭-C. Play each 4 beats. Let the colour sink in. Improvise with C major pentatonic — notice how your melody feels different over the borrowed chord, like stepping into shadow.",
+  quiz: [{
+    q: "What is a borrowed chord?",
+    a: "A chord taken from the parallel minor key and used in a major key context for added darkness and colour.",
+    hint: "C major borrows from C minor — same root, different scale."
+  }, {
+    q: "What is the most common borrowed chord in C major?",
+    a: "Fm (iv minor) — its A♭ creates bittersweet colour not available in C major.",
+    hint: "F major is the IV chord in C; Fm borrows A♭ from C minor."
+  }, {
+    q: "What is the ♭VI–♭VII–I in C major?",
+    a: "A♭ major – B♭ major – C major — a powerful cinematic borrowed progression.",
+    hint: "Both A♭ and B♭ are borrowed from C minor."
+  }, {
+    q: "What is 'modal mixture'?",
+    a: "Mixing chords from parallel major and minor keys in the same progression — creating harmonic colour through borrowed tones.",
+    hint: "'Mixture' = blending two parallel worlds."
+  }],
+  pianoHL: ["F", "A", "C"],
+  scaleName: "Fm borrowed (F-Ab-C)"
+}, {
+  week: 4,
+  day: 24,
+  title: "Secondary Dominants — Visiting Other Keys",
+  subtitle: "Every chord can have its own dominant",
+  collier: "\"Every chord can have its own gravity. A secondary dominant is like opening a door in a room you didn't know was there.\"",
+  theory: "A secondary dominant is a dominant 7th chord that resolves to a chord OTHER than the tonic:\n\nIn C major:\n• V/V  = D7  → resolves to G (V)\n• V/ii = A7  → resolves to Dm (ii)\n• V/IV = C7  → resolves to F (IV)\n• V/vi = E7  → resolves to Am (vi)\n\nC major with secondary dominants:\nC – A7 – Dm7 – G7 – C\n\nThat A7 (V/ii) has a C♯ — foreign to C major — but it powerfully 'points' to Dm. It applies the ii-V-I logic to any chord in the key.",
+  pianoFocus: "Play C-Dm-G-C. Now insert A7 before Dm: C-A7-Dm-G-C. The A7 (A-C♯-E-G) has that C♯ — not in C major — but it creates a beautiful chromatic pull toward Dm. This is a secondary dominant in action. The C♯ leads a half step up to D.",
+  earTask: "Listen for moments in songs where a note sounds 'foreign' but somehow right — often a chromatic note that creates extra pull toward the next chord. That's usually a secondary dominant. The E7 chord in a C major song (V/vi) is extremely common in pop ballads.",
+  jamPrompt: "Full secondary dominant journey: C – E7 – Am – A7 – Dm – D7 – G7 – C. Every chord except C and Am has a secondary dominant pushing it. Play very slowly, hear each 'pointing' chord create gravity toward its target. This is the vocabulary of jazz harmony.",
+  quiz: [{
+    q: "What is a secondary dominant?",
+    a: "A dominant 7th chord that resolves to a chord other than the tonic — temporarily treating another chord as 'home'.",
+    hint: "It applies the V→I resolution logic to any chord in the key."
+  }, {
+    q: "What is the V/ii in C major?",
+    a: "A7 — the dominant of Dm (ii chord)",
+    hint: "The dominant of Dm is A7: A-C♯-E-G."
+  }, {
+    q: "What note in A7 is 'foreign' to C major?",
+    a: "C♯ — not in C major, but it creates a strong half-step pull up to D (the root of Dm).",
+    hint: "Leading tone: C♯ wants to rise a half step to D."
+  }, {
+    q: "What is 'tonicisation'?",
+    a: "Briefly making a non-tonic chord sound like a temporary home, using its secondary dominant.",
+    hint: "Tonicise Dm by playing A7→Dm — for that moment, Dm feels like home."
+  }],
+  pianoHL: ["A", "C", "E", "G"],
+  scaleName: "A7 — Secondary Dom."
+}, {
+  week: 4,
+  day: 25,
+  title: "Modulation — Travelling Between Keys",
+  subtitle: "The moment music lifts off the ground",
+  collier: "\"Modulation is the moment music takes flight. When I modulate, I don't just change key — I change emotional altitude.\"",
+  theory: "Modulation = moving from one key to another mid-piece. Three techniques:\n\n1. PIVOT CHORD: A chord common to both keys acts as the hinge.\n   C → G major: Am = vi in C AND ii in G.\n   Play: C – F – Am – D7 – Gmaj7\n\n2. DIRECT (CHROMATIC): Simply move to the new key — especially powerful by half step.\n   C → D♭ major: surprise jump, used in pop climaxes.\n\n3. COMMON TONE: Hold a single note that exists in both keys.\n   C → E major: both keys share the note E — hold it as you shift.\n\nJacob Collier's 'Moon River' modulates through 8 different keys — including keys that 'don't technically exist.'",
+  pianoFocus: "Pivot modulation: play C-F-Am-D7-Gmaj7. The Am is your pivot — vi in C and ii in G. After D7, you've smoothly landed in G major. This should feel almost seamless — you only know you've moved when you look back.",
+  earTask: "Listen to 'Somewhere Over the Rainbow' (modulates in the bridge) or Jacob's 'Moon River.' Count the key centre shifts. Notice whether each change feels surprising or inevitable — the difference is how well the modulation is prepared.",
+  jamPrompt: "Chromatic modulation: play Am-F-C-G in C major for 4 bars. Then without warning, play B♭m-G♭-D♭-A♭ — same chord pattern a half step up (D♭ major). Feel the floor shifting. Then slide back. This is the dramatic chromatic modulation Jacob uses for emotional climaxes.",
+  quiz: [{
+    q: "What is a pivot chord modulation?",
+    a: "Using a chord that exists in both the old and new key as the transition point — making the key change feel smooth.",
+    hint: "Am = vi in C major AND ii in G major — it belongs to both."
+  }, {
+    q: "What is a direct (chromatic) modulation?",
+    a: "Abruptly jumping to a new key without preparation — often a half step up for dramatic effect.",
+    hint: "The final chorus jumping a half step is the classic pop 'truck driver modulation.'"
+  }, {
+    q: "How many keys does Jacob Collier's 'Moon River' modulate through?",
+    a: "8 different key centres — including microtonal areas that 'don't technically exist' in standard tuning.",
+    hint: "Including D half-flat major — a key between piano keys."
+  }, {
+    q: "What is a common tone modulation?",
+    a: "Holding a single note common to both keys as the hinge point for the key change.",
+    hint: "E appears in both C major and E major — hold E as you shift between them."
+  }],
+  pianoHL: ["A", "C", "E"],
+  scaleName: "Am — Pivot Chord"
+}, {
+  week: 4,
+  day: 26,
+  title: "Negative Harmony — Jacob's Famous Mirror",
+  subtitle: "Reflecting music around an axis to find its shadow self",
+  collier: "\"Every chord has a mirror image. Play a song in negative harmony and you find the version that was always hiding inside it.\"",
+  theory: "Negative harmony (from Ernst Levy, popularised by Jacob Collier) reflects notes around the axis of the key.\n\nIn C major, the axis is between E and E♭ (between G and A♭ on the circle of fifths).\n\nReflection in C major:\nC ↔ G   D ↔ F   E = axis   A ↔ B♭   B ↔ A♭\n\nC major triad (C-E-G) → F minor (F-A♭-C)\nG major (G-B-D) → F minor (Fm)\n\nI-V-vi-IV becomes iv-IV-III-♭VII in the negative world. Recognisable but eerily inverted — like music seen in a mirror.\n\nErnst Levy's book sold ~7 copies/year until Jacob mentioned it — then 800 in one month.",
+  pianoFocus: "Play I-V-vi-IV in C: C-G-Am-F. Now play its negative harmony: Fm-C-E♭-B♭. Same rhythmic shape — mirror emotional world. This is exactly what Jacob Collier did to make his negative harmony covers go viral.",
+  earTask: "Search YouTube for 'Jacob Collier negative harmony' and watch his explanation. Then listen to any song that's had negative harmony applied. The melody is often recognisable but floating in a stranger, darker, more complex world.",
+  jamPrompt: "Negative harmony improv: play in F minor (F-G-A♭-B♭-C-D-E♭) over Fm-B♭m-C7-Fm. This is the 'mirror world' of C major. Let the A♭s and E♭s sound strange and beautiful. Follow the feeling — this is advanced harmonic territory.",
+  quiz: [{
+    q: "What is negative harmony?",
+    a: "Reflecting notes and chords around the axis of a key to create a 'mirror image' — a shadow version of the original harmony.",
+    hint: "C and G swap. D and F swap. The scale is flipped around its centre."
+  }, {
+    q: "Where is the axis of negative harmony in C major?",
+    a: "Between E and E♭ — or equivalently, between G and A♭ on the circle of fifths.",
+    hint: "The midpoint between the major and minor versions of the key."
+  }, {
+    q: "What does a C major triad become in negative harmony?",
+    a: "F minor (F-A♭-C) — the bright I chord becomes the dark iv chord.",
+    hint: "C↔G, E at axis, so C-E-G reflects to G-E♭-C = rearranged: F-A♭-C (Fm)."
+  }, {
+    q: "Who originally developed negative harmony theory?",
+    a: "Ernst Levy in 'A Theory of Harmony' (1985) — Jacob Collier popularised it through viral YouTube demonstrations in 2017.",
+    hint: "Levy's book went from 7 copies/year to 800 in a month after Jacob mentioned it."
+  }],
+  pianoHL: ["F", "A", "C"],
+  scaleName: "Fm — C's negative mirror"
+}, {
+  week: 4,
+  day: 27,
+  title: "Quartal Harmony & Modern Voicings",
+  subtitle: "Breaking free from thirds — the sound of modern jazz",
+  collier: "\"You don't have to stack thirds. Stack fourths, seconds, anything. The ear finds beauty in unexpected geometry.\"",
+  theory: "Traditional chords stack thirds (C-E-G-B). Quartal harmony stacks fourths (C-F-B♭-E♭).\n\nKey quartal voicing: C – F – B♭\nOr four stacked: C – F – B♭ – E♭\n\nWhy it sounds modern: without a clear third, major/minor quality is ambiguous — the chord floats, creating openness. This is the signature sound of McCoy Tyner, Herbie Hancock, and Jacob Collier's more adventurous moments.\n\nSuspended chords work similarly:\n• Csus4: C-F-G (no third — unresolved, floating)\n• Csus2: C-D-G (no third — open, modern)",
+  pianoFocus: "Play C-F-B♭ (stacked fourths). No clear major or minor. Now move each note up by a fourth: F-B♭-E♭. Then B♭-E♭-A♭. You're travelling the circle of fourths using quartal shapes — this is how Coltrane and Herbie thought about harmony.",
+  earTask: "Listen to Herbie Hancock 'Maiden Voyage' or McCoy Tyner 'My Favourite Things.' Those ambiguous, floating chords are quartal harmony. The lack of a definite major or minor quality makes them feel spacious, cinematic, and modern.",
+  jamPrompt: "Sus chord improv: play Csus4-Fsus4-Gsus4-Csus4 (replace all major chords with sus4 versions). With no thirds defining major or minor, your melody's choice of E or E♭ will define the mood entirely — the listener waits for YOUR note to decide. That's musical power.",
+  quiz: [{
+    q: "What is quartal harmony?",
+    a: "Building chords by stacking perfect fourths instead of thirds — creates an open, ambiguous, modern sound.",
+    hint: "C-F-B♭ instead of C-E-G."
+  }, {
+    q: "What is a suspended chord (sus4)?",
+    a: "A chord with the 4th replacing the 3rd (e.g., Csus4 = C-F-G) — neither major nor minor, unresolved.",
+    hint: "'Suspended' = the 4th wants to resolve down to the 3rd."
+  }, {
+    q: "Why do quartal voicings sound 'modern'?",
+    a: "Without a clear third, major/minor quality is ambiguous — the chord floats, creating openness and mystery.",
+    hint: "The third determines major vs minor — remove it and you remove that certainty."
+  }, {
+    q: "Name two jazz pianists famous for quartal harmony.",
+    a: "McCoy Tyner and Herbie Hancock (also Bill Evans, Chick Corea) — foundational to post-bop jazz piano.",
+    hint: "Listen to Herbie's 'Maiden Voyage' for the clearest example."
+  }],
+  pianoHL: ["C", "F", "B"],
+  scaleName: "Quartal: C-F-Bb"
+}, {
+  week: 4,
+  day: 28,
+  title: "30-Day Review — You Are a Music Theorist",
+  subtitle: "From 12 notes to negative harmony in just 7 hours of focused study",
+  collier: "\"The more you hear, the more you improve. You simply become more and more enriched. It never ends.\"",
+  theory: "In 28 focused days (≈7 total hours at 15 min/day), you have learned:\n\nWEEK 1: 12 notes, intervals, major scale, minor scale, triads, I-IV-V\nWEEK 2: Circle of Fifths, 7 diatonic chords, chord functions, 7th chords, ii-V-I, reharmonisation\nWEEK 3: Rhythm & groove, all 7 modes, pentatonic scales, voice leading, interval recognition, blues scale\nWEEK 4: Extended chords, borrowed chords, secondary dominants, modulation, negative harmony, quartal harmony\n\nThis is a genuine music theory education. Most musicians take years to cover this ground.",
+  pianoFocus: "The ultimate test: improvise freely for 10 minutes over Am-F-C-G. Use everything — pentatonic, blues notes, modes, extended chord colours, voice leading. No rules. Follow your ear entirely. Record it and listen back with fresh ears.",
+  earTask: "Go back and listen to a Jacob Collier song you know. Now — can you identify: the key, chord functions, any borrowed chords, modal moments, secondary dominants? You have the ears for this now. You've earned them.",
+  jamPrompt: "Composition challenge: write a 4-bar piano piece using at least one 7th chord, one borrowed chord, and one moment of voice leading you're proud of. Play it 20 times until it feels like yours. This is your first original composition. Give it a name.",
+  quiz: [{
+    q: "Name the 7 modes of the major scale in order.",
+    a: "Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian",
+    hint: "I Don't Play Loud Music After Lessons."
+  }, {
+    q: "Describe the ii-V-I in one sentence.",
+    a: "A minor 7th chord resolves to a dominant 7th a fifth below, which resolves to a major 7th a fifth below — the foundational jazz progression.",
+    hint: "Dm7→G7→Cmaj7: roots move D→G→C, each a fifth down."
+  }, {
+    q: "What is the difference between borrowed chords and secondary dominants?",
+    a: "Borrowed chords come from the parallel minor key. Secondary dominants are dominant 7ths that point to diatonic chords other than I.",
+    hint: "Both add 'foreign' notes — but from different sources."
+  }, {
+    q: "What is Jacob Collier's ultimate philosophy in one sentence?",
+    a: "\"Music is about feeling — let emotion lead, trust your ear above all, and follow curiosity wherever it takes you.\"",
+    hint: "Seek your own goosebumps."
+  }],
+  pianoHL: ["C", "D", "E", "F", "G", "A", "B"],
+  scaleName: "The whole map"
+}, {
+  week: 5,
+  day: 29,
+  title: "Months 2–3: Depth Over Width",
+  subtitle: "The real learning begins when you return to the beginning",
+  collier: "\"Go deeper, not wider. Mastery lives in the ten-thousandth repetition, not the ten-thousandth concept.\"",
+  theory: "Months 2-3 roadmap:\n\n🎯 The ii-V-I in ALL 12 keys (one new key per week)\n🎯 Transcribe 5 Jacob Collier songs by ear — no chord charts\n🎯 Reharmonise a simple melody 3 different ways\n🎯 One modal improv vamp per week (Dorian, Mixolydian, Lydian)\n🎯 Record weekly — listen critically, without judgement\n🎯 Learn your first jazz standard: 'Autumn Leaves' or 'Fly Me to the Moon'\n\nThe goal: not learning more concepts — making what you know feel like YOURS.",
+  pianoFocus: "ii-V-I in all 12 keys daily. Start C, add one new key per week. By month 3: Dm7-G7-Cmaj7 through all 12 keys from memory, fluidly, both hands. This single exercise will transform your piano playing.",
+  earTask: "Transcription practice: listen to Jacob's 'Don't You Know' piano intro and try to find those chords by ear. Start with the bass note, build up. Even 50% accuracy is enormous growth — and pure ear training.",
+  jamPrompt: "Monthly creative challenge: pick ONE chord progression and explore it for the entire month. Am-F-C-G, 15 min/day. By day 30, you will have found melodies, rhythms, and harmonic textures you cannot predict today. Deep practice reveals the infinite.",
+  quiz: [{
+    q: "What should be the main focus of months 2-3?",
+    a: "Applying Month 1 knowledge to real music — ii-V-I in all 12 keys, transcription, and learning jazz standards by ear.",
+    hint: "Depth, not width. Same concepts, richer understanding."
+  }, {
+    q: "What is musical transcription?",
+    a: "Learning music by ear directly from recordings — no sheet music, no chord charts. The deepest ear training.",
+    hint: "How Jacob Collier learned: by listening obsessively and reproducing what he heard."
+  }, {
+    q: "What is a good first jazz standard to learn?",
+    a: "'Autumn Leaves' or 'Fly Me to the Moon' — both use ii-V-I extensively in multiple keys.",
+    hint: "Simple melodically, rich harmonically — perfect for applying what you know."
+  }, {
+    q: "Why go DEEPER into fewer concepts rather than learning more?",
+    a: "Mastery lives in deep familiarity — hearing all the possibilities within one idea, not skimming the surface of many.",
+    hint: "\"The ten-thousandth repetition\" reveals what the first hundred cannot."
+  }],
+  pianoHL: ["D", "F", "A", "C"],
+  scaleName: "Dm7 — start of journey"
+}, {
+  week: 5,
+  day: 30,
+  title: "Months 4–12: The Jacob Collier Path",
+  subtitle: "Improvisation fluency, composition, and your own voice",
+  collier: "\"Curiosity is where all the joy starts. I know those days when my mind is closed and I don't feel curious. Curiosity is everything.\"",
+  theory: "The 12-month horizon:\n\nMonths 4-6:\n• Advanced reharmonisation (tritone subs, chromatic approaches)\n• Polyrhythm — 3 against 4 (Jacob's rhythmic superpower)\n• Write and record 3 original pieces\n• Learn 10 jazz standards\n\nMonths 7-9:\n• Improvise freely for 15+ minutes\n• Transcribe a complete Jacob Collier arrangement\n• Explore microtonal concepts (his deepest territory)\n\nMonths 10-12:\n• Perform for someone — even one person\n• Arrange a favourite song in your own harmonic style\n• YOUR GOAL: Improvise freely and expressively for 10+ minutes, guided only by your ear",
+  pianoFocus: "Write your 6-month piano goal today. Be specific: 'By [date] I will improvise over a ii-V-I in 6 keys without looking.' Put it somewhere visible. Return to Day 1 — notice how completely differently you hear it now.",
+  earTask: "The ultimate long-term ear training: once a week, sit at the piano for 20 minutes with no goal except listening to yourself. Play slowly. Notice what sounds beautiful to YOU. Your personal aesthetic is developing. Trust it completely.",
+  jamPrompt: "Final improvisation: 10 minutes, no rules, no constraints. Every concept from 30 days available to you. Follow only what gives you goosebumps. Record it. This is the beginning of your musical voice — not the end of learning. It never ends.",
+  quiz: [{
+    q: "What is polyrhythm?",
+    a: "Two or more conflicting rhythmic patterns simultaneously (e.g., 3 against 4). Jacob uses it to create rhythmic complexity that mirrors harmonic colour.",
+    hint: "Two people clapping different patterns — the spaces between create something new."
+  }, {
+    q: "What is tritone substitution?",
+    a: "Replacing a dominant 7th with another dominant 7th whose root is a tritone away — they share the same tritone and resolve equally well.",
+    hint: "G7→C becomes D♭7→C. Both contain F and B, the tritone that resolves to C."
+  }, {
+    q: "What is Jacob Collier's advice for developing your musical voice?",
+    a: "Follow curiosity, trust your ear, let emotion lead — seek YOUR goosebumps, not someone else's.",
+    hint: "Your personal aesthetic — what moves YOU — is the foundation of your artistic identity."
+  }, {
+    q: "What is the ultimate goal of this 12-month program?",
+    a: "To improvise freely and expressively on piano for 10+ minutes — guided entirely by your ear, emotion, and a deeply internalised theoretical foundation.",
+    hint: "Not to know more theory, but to feel it so deeply it disappears into music."
+  }],
+  pianoHL: ["C", "D", "E", "F", "G", "A", "B"],
+  scaleName: "The whole keyboard"
+}];
+
+// ─── PIANO ─────────────────────────────────────────────────────────────────────
+const WK = ["C", "D", "E", "F", "G", "A", "B"];
+const BK = {
+  "C#": 0.65,
+  "D#": 1.65,
+  "F#": 3.65,
+  "G#": 4.65,
+  "A#": 5.65
+};
+const ALIAS = {
+  "Db": "C#",
+  "Eb": "D#",
+  "Gb": "F#",
+  "Ab": "G#",
+  "Bb": "A#"
+};
+const SCALES = {
+  "C Major": {
+    notes: ["C", "D", "E", "F", "G", "A", "B"],
+    col: "#f0b429"
+  },
+  "A Minor": {
+    notes: ["A", "B", "C", "D", "E", "F", "G"],
+    col: "#9f7aea"
+  },
+  "C Pentatonic": {
+    notes: ["C", "D", "E", "G", "A"],
+    col: "#34c98a"
+  },
+  "Am Pentatonic": {
+    notes: ["A", "C", "D", "E", "G"],
+    col: "#5b9cf6"
+  },
+  "F Lydian": {
+    notes: ["F", "G", "A", "B", "C", "D", "E"],
+    col: "#e07b00"
+  },
+  "D Dorian": {
+    notes: ["D", "E", "F", "G", "A", "B", "C"],
+    col: "#34c98a"
+  },
+  "G Mixolydian": {
+    notes: ["G", "A", "B", "C", "D", "E", "F"],
+    col: "#f05e6a"
+  },
+  "A Blues": {
+    notes: ["A", "C", "D", "Eb", "E", "G"],
+    col: "#f05e6a"
+  },
+  "Cmaj7": {
+    notes: ["C", "E", "G", "B"],
+    col: "#f0b429"
+  },
+  "Dm7": {
+    notes: ["D", "F", "A", "C"],
+    col: "#9f7aea"
+  },
+  "G7": {
+    notes: ["G", "B", "D", "F"],
+    col: "#f05e6a"
+  }
+};
+function Piano({
+  hl = [],
+  hlCol = "#f0b429"
+}) {
+  const res = hl.map(n => ALIAS[n] || n);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative",
+      height: 88,
+      width: "100%",
+      maxWidth: 340,
+      margin: "0 auto",
+      userSelect: "none"
+    }
+  }, WK.map((n, i) => {
+    const lit = res.includes(n);
+    return /*#__PURE__*/React.createElement("div", {
+      key: n,
+      style: {
+        position: "absolute",
+        left: `${i / 7 * 100}%`,
+        width: `${100 / 7 - .5}%`,
+        height: "100%",
+        background: lit ? hlCol : "#f0ece0",
+        border: "1px solid #aaa",
+        borderRadius: "0 0 6px 6px",
+        display: "flex",
+        alignItems: "flex-end",
+        justifyContent: "center",
+        paddingBottom: 5,
+        boxSizing: "border-box",
+        boxShadow: lit ? `0 0 10px ${hlCol}80` : "none",
+        transition: "all .25s"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 8,
+        fontWeight: "bold",
+        color: lit ? "#fff" : "#bbb",
+        fontFamily: "Georgia,serif"
+      }
+    }, n));
+  }), Object.entries(BK).map(([n, pos]) => {
+    const lit = res.includes(n);
+    return /*#__PURE__*/React.createElement("div", {
+      key: n,
+      style: {
+        position: "absolute",
+        left: `${pos / 7 * 100}%`,
+        width: `${.6 / 7 * 100}%`,
+        height: "57%",
+        background: lit ? hlCol : "#1a1a1a",
+        borderRadius: "0 0 4px 4px",
+        zIndex: 2,
+        boxShadow: lit ? `0 0 8px ${hlCol}` : undefined,
+        transition: "all .25s"
+      }
+    });
+  }));
+}
+
+// ─── CIRCLE OF FIFTHS ─────────────────────────────────────────────────────────
+const COF_K = ["C", "G", "D", "A", "E", "B", "F♯", "D♭", "A♭", "E♭", "B♭", "F"];
+const COF_m = ["Am", "Em", "Bm", "F♯m", "C♯m", "G♯m", "D♯m", "B♭m", "Fm", "Cm", "Gm", "Dm"];
+const COF_C = ["#f0b429", "#e89a20", "#e07b00", "#e05050", "#c94040", "#9f5ec0", "#7b5ec0", "#5b7cf6", "#3da8e0", "#34c98a", "#44c070", "#a0b820"];
+function CircleOfFifths() {
+  const S = 220,
+    cx = S / 2,
+    cy = S / 2,
+    R1 = 95,
+    R2 = 70,
+    R3 = 48;
+  return /*#__PURE__*/React.createElement("svg", {
+    width: S,
+    height: S,
+    viewBox: `0 0 ${S} ${S}`,
+    style: {
+      display: "block",
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: cx,
+    cy: cy,
+    r: R1 + 4,
+    fill: "#1e1a35",
+    stroke: "#2e2850",
+    strokeWidth: "1"
+  }), COF_K.map((k, i) => {
+    const a = i / 12 * Math.PI * 2 - Math.PI / 2;
+    const a1 = a - Math.PI / 12 + .04,
+      a2 = a + Math.PI / 12 - .04;
+    const mx = cx + Math.cos(a) * (R1 - 14),
+      my = cy + Math.sin(a) * (R1 - 14);
+    const mm = cx + Math.cos(a) * (R2 - 8),
+      mmy = cy + Math.sin(a) * (R2 - 8);
+    const col = COF_C[i];
+    const seg = r => {
+      const x1 = cx + Math.cos(a1) * r,
+        y1 = cy + Math.sin(a1) * r;
+      const x2 = cx + Math.cos(a2) * r,
+        y2 = cy + Math.sin(a2) * r;
+      const x3 = cx + Math.cos(a2) * (r - 22),
+        y3 = cy + Math.sin(a2) * (r - 22);
+      const x4 = cx + Math.cos(a1) * (r - 22),
+        y4 = cy + Math.sin(a1) * (r - 22);
+      return `M${x1},${y1} A${r},${r} 0 0,1 ${x2},${y2} L${x3},${y3} A${r - 22},${r - 22} 0 0,0 ${x4},${y4} Z`;
+    };
+    return /*#__PURE__*/React.createElement("g", {
+      key: k
+    }, /*#__PURE__*/React.createElement("path", {
+      d: seg(R1),
+      fill: col + "50",
+      stroke: "#0e0c1a",
+      strokeWidth: "1.5"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: seg(R2),
+      fill: "#1e1a3570",
+      stroke: "#0e0c1a",
+      strokeWidth: "1"
+    }), /*#__PURE__*/React.createElement("text", {
+      x: mx,
+      y: my,
+      textAnchor: "middle",
+      dominantBaseline: "central",
+      fontSize: "10.5",
+      fontWeight: "bold",
+      fill: col,
+      fontFamily: "Georgia,serif"
+    }, k), /*#__PURE__*/React.createElement("text", {
+      x: mm,
+      y: mmy,
+      textAnchor: "middle",
+      dominantBaseline: "central",
+      fontSize: "7.5",
+      fill: "#7a7098",
+      fontFamily: "Georgia,serif"
+    }, COF_m[i]));
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: cx,
+    cy: cy,
+    r: R3,
+    fill: "#0e0c1a",
+    stroke: "#2e2850",
+    strokeWidth: "1.5"
+  }), /*#__PURE__*/React.createElement("text", {
+    x: cx,
+    y: cy - 6,
+    textAnchor: "middle",
+    fontSize: "9",
+    fill: "#f0b429",
+    fontFamily: "Georgia,serif",
+    fontStyle: "italic"
+  }, "Circle"), /*#__PURE__*/React.createElement("text", {
+    x: cx,
+    y: cy + 6,
+    textAnchor: "middle",
+    fontSize: "9",
+    fill: "#f0b429",
+    fontFamily: "Georgia,serif",
+    fontStyle: "italic"
+  }, "of Fifths"));
+}
+
+// ─── QUIZ ──────────────────────────────────────────────────────────────────────
+function Quiz({
+  questions
+}) {
+  const [idx, setIdx] = useState(0);
+  const [phase, setPhase] = useState("q");
+  const [score, setScore] = useState({
+    y: 0,
+    n: 0
+  });
+  const [done, setDone] = useState(false);
+  const q = questions[idx];
+  const next = y => {
+    const s = {
+      y: score.y + (y ? 1 : 0),
+      n: score.n + (y ? 0 : 1)
+    };
+    setScore(s);
+    if (idx + 1 >= questions.length) {
+      setDone(true);
+    } else {
+      setIdx(idx + 1);
+      setPhase("q");
+    }
+  };
+  if (done) {
+    const pct = Math.round(score.y / questions.length * 100);
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: "center",
+        padding: "20px 0"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 44,
+        marginBottom: 8
+      }
+    }, pct >= 75 ? "🎵" : pct >= 50 ? "🎹" : "📖"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 20,
+        color: C.gold,
+        fontFamily: "Georgia,serif",
+        marginBottom: 4
+      }
+    }, score.y, "/", questions.length, " correct"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        color: C.muted,
+        marginBottom: 20,
+        lineHeight: 1.5
+      }
+    }, pct >= 75 ? "Excellent — Jacob would be proud!" : pct >= 50 ? "Good work. Revisit the concepts you missed." : "Review today's lesson and try again. You've got this."), /*#__PURE__*/React.createElement(Btn, {
+      col: C.gold,
+      dark: true,
+      onClick: () => {
+        setIdx(0);
+        setPhase("q");
+        setScore({
+          y: 0,
+          n: 0
+        });
+        setDone(false);
+      }
+    }, "Retry Quiz \u2192"));
+  }
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: 10,
+      fontSize: 12,
+      color: C.muted
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "Question ", idx + 1, " of ", questions.length), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.green
+    }
+  }, score.y, " correct")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.card,
+      borderRadius: 12,
+      padding: "16px",
+      marginBottom: 12,
+      borderLeft: `3px solid ${C.gold}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: C.gold,
+      letterSpacing: 2,
+      textTransform: "uppercase",
+      marginBottom: 8
+    }
+  }, phase === "q" ? "Question" : phase === "hint" ? "💡 Hint" : "Answer"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: phase === "answer" ? C.soft : C.text,
+      lineHeight: 1.6,
+      fontFamily: "Georgia,serif"
+    }
+  }, phase === "q" ? q.q : phase === "hint" ? q.hint : q.a)), phase === "q" && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setPhase("hint"),
+    style: {
+      flex: 1,
+      background: C.surface,
+      color: C.muted,
+      border: `1px solid ${C.border}`,
+      borderRadius: 8,
+      padding: 9,
+      cursor: "pointer",
+      fontFamily: "Georgia,serif",
+      fontSize: 12
+    }
+  }, "\uD83D\uDCA1 Hint"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setPhase("answer"),
+    style: {
+      flex: 2,
+      background: C.gold,
+      color: "#0e0c1a",
+      border: "none",
+      borderRadius: 8,
+      padding: 9,
+      cursor: "pointer",
+      fontFamily: "Georgia,serif",
+      fontSize: 13,
+      fontWeight: "bold"
+    }
+  }, "Reveal Answer")), phase === "hint" && /*#__PURE__*/React.createElement("button", {
+    onClick: () => setPhase("answer"),
+    style: {
+      width: "100%",
+      background: C.gold,
+      color: "#0e0c1a",
+      border: "none",
+      borderRadius: 8,
+      padding: 10,
+      cursor: "pointer",
+      fontFamily: "Georgia,serif",
+      fontSize: 13,
+      fontWeight: "bold"
+    }
+  }, "Show Full Answer \u2192"), phase === "answer" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: C.muted,
+      marginBottom: 8,
+      textAlign: "center"
+    }
+  }, "Did you get it?"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => next(false),
+    style: {
+      flex: 1,
+      background: "#3a1a1a",
+      color: C.red,
+      border: `1px solid ${C.red}40`,
+      borderRadius: 8,
+      padding: 10,
+      cursor: "pointer",
+      fontFamily: "Georgia,serif",
+      fontSize: 13
+    }
+  }, "\u2717 Not yet"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => next(true),
+    style: {
+      flex: 1,
+      background: "#0a2a1a",
+      color: C.green,
+      border: `1px solid ${C.green}40`,
+      borderRadius: 8,
+      padding: 10,
+      cursor: "pointer",
+      fontFamily: "Georgia,serif",
+      fontSize: 13
+    }
+  }, "\u2713 Got it!"))));
+}
+
+// ─── JAM TIMER ────────────────────────────────────────────────────────────────
+function JamTimer({
+  prompt,
+  pianoFocus
+}) {
+  const [going, setGoing] = useState(false);
+  const [s, setS] = useState(0);
+  const ref = useRef(null);
+  const toggle = () => {
+    if (going) {
+      clearInterval(ref.current);
+      setGoing(false);
+    } else {
+      setGoing(true);
+      ref.current = setInterval(() => setS(x => x + 1), 1000);
+    }
+  };
+  useEffect(() => () => clearInterval(ref.current), []);
+  const m = Math.floor(s / 60),
+    sec = s % 60;
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Card, {
+    title: "\uD83C\uDFB8 Jam / Improv Challenge",
+    col: C.green
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: 0,
+      fontSize: 14,
+      color: C.text,
+      lineHeight: 1.75,
+      fontFamily: "Georgia,serif"
+    }
+  }, prompt)), /*#__PURE__*/React.createElement(Card, {
+    title: "\uD83C\uDFB9 Piano Focus",
+    col: C.gold
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: 0,
+      fontSize: 13,
+      color: C.soft,
+      lineHeight: 1.7,
+      fontFamily: "Georgia,serif"
+    }
+  }, pianoFocus)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.surface,
+      borderRadius: 12,
+      padding: "16px",
+      border: `1px solid ${C.border}`,
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 36,
+      fontFamily: "Georgia,serif",
+      color: C.gold,
+      letterSpacing: 6,
+      marginBottom: 10
+    }
+  }, String(m).padStart(2, "0"), ":", String(sec).padStart(2, "0")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: toggle,
+    style: {
+      background: going ? "#3a1a1a" : C.gold,
+      color: going ? C.red : "#0e0c1a",
+      border: "none",
+      borderRadius: 8,
+      padding: "10px 28px",
+      cursor: "pointer",
+      fontSize: 14,
+      fontFamily: "Georgia,serif",
+      fontWeight: "bold"
+    }
+  }, going ? "⏹ Stop" : s > 0 ? "▶ Resume" : "▶ Start Timer"), s > 0 && !going && /*#__PURE__*/React.createElement("button", {
+    onClick: () => setS(0),
+    style: {
+      background: "transparent",
+      color: C.muted,
+      border: `1px solid ${C.border}`,
+      borderRadius: 8,
+      padding: "10px 14px",
+      cursor: "pointer",
+      fontSize: 12,
+      fontFamily: "Georgia,serif"
+    }
+  }, "Reset"))));
+}
+
+// ─── EAR TRAINING ─────────────────────────────────────────────────────────────
+function EarTask({
+  task
+}) {
+  const [done, setDone] = useState(false);
+  return /*#__PURE__*/React.createElement(Card, {
+    title: "\uD83D\uDC42 Ear Training",
+    col: C.purple
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: "0 0 12px",
+      fontSize: 14,
+      color: C.text,
+      lineHeight: 1.75,
+      fontFamily: "Georgia,serif"
+    }
+  }, task), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setDone(!done),
+    style: {
+      background: done ? "#0a2a1a" : C.surface,
+      color: done ? C.green : C.muted,
+      border: `1px solid ${done ? C.green + "60" : C.border}`,
+      borderRadius: 8,
+      padding: "7px 16px",
+      cursor: "pointer",
+      fontSize: 12,
+      fontFamily: "Georgia,serif",
+      transition: "all .2s"
+    }
+  }, done ? "✓ Ears trained!" : "Mark as completed"));
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function Card({
+  title,
+  col,
+  children
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.card,
+      borderRadius: 12,
+      padding: "13px 15px",
+      marginBottom: 12,
+      borderTop: `2px solid ${col}30`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: col,
+      fontWeight: "bold",
+      letterSpacing: 2,
+      textTransform: "uppercase",
+      marginBottom: 8
+    }
+  }, title), children);
+}
+function Btn({
+  col,
+  dark,
+  onClick,
+  children
+}) {
+  return /*#__PURE__*/React.createElement("button", {
+    onClick: onClick,
+    style: {
+      background: col,
+      color: dark ? "#0e0c1a" : C.text,
+      border: "none",
+      borderRadius: 8,
+      padding: "10px 22px",
+      cursor: "pointer",
+      fontSize: 13,
+      fontFamily: "Georgia,serif",
+      fontWeight: "bold"
+    }
+  }, children);
+}
+
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
+export default function App() {
+  const [di, setDi] = useState(0);
+  const [tab, setTab] = useState("lesson");
+  const [done, setDone] = useState(new Set());
+  const [sk, setSk] = useState("C Major");
+  const [showAll, setShowAll] = useState(false);
+  const day = DAYS[di];
+  const wt = WEEK_THEMES[day.week - 1];
+  const tc = wt.color;
+  const pct = Math.round(done.size / DAYS.length * 100);
+  const sd = SCALES[sk];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.bg,
+      minHeight: "100vh",
+      color: C.text,
+      fontFamily: "Georgia,serif",
+      maxWidth: 480,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(160deg,#1e1835 0%,#0e0c1a 100%)",
+      borderBottom: `2px solid ${tc}30`,
+      padding: "16px 16px 12px",
+      position: "sticky",
+      top: 0,
+      zIndex: 50
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      letterSpacing: 3,
+      color: tc,
+      textTransform: "uppercase",
+      marginBottom: 2
+    }
+  }, wt.emoji, " ", wt.label), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 17,
+      fontWeight: "bold",
+      color: C.cream,
+      lineHeight: 1.2
+    }
+  }, "Jacob Collier Method"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: C.muted,
+      marginTop: 1
+    }
+  }, "Piano-first \xB7 Beginner \xB7 15 min/day")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "right"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 22,
+      color: C.gold,
+      fontWeight: "bold"
+    }
+  }, done.size, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: C.muted
+    }
+  }, "/", DAYS.length)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: C.muted
+    }
+  }, "days done"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 3,
+      background: C.surface,
+      borderRadius: 2,
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: "100%",
+      width: `${pct}%`,
+      background: `linear-gradient(90deg,${tc},${C.gold})`,
+      borderRadius: 2,
+      transition: "width .6s ease"
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "10px 16px",
+      background: C.surface,
+      borderBottom: `1px solid ${C.border}`
+    }
+  }, (showAll ? [1, 2, 3, 4, 5] : [day.week]).map(w => {
+    const wt2 = WEEK_THEMES[w - 1];
+    return /*#__PURE__*/React.createElement("div", {
+      key: w,
+      style: {
+        marginBottom: showAll ? 10 : 0
+      }
+    }, showAll && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: wt2.color,
+        letterSpacing: 2,
+        textTransform: "uppercase",
+        marginBottom: 5
+      }
+    }, wt2.emoji, " ", wt2.label), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 4
+      }
+    }, DAYS.filter(d => d.week === w).map(d => {
+      const idx = DAYS.indexOf(d);
+      const act = idx === di,
+        dn = done.has(idx);
+      return /*#__PURE__*/React.createElement("button", {
+        key: d.day,
+        onClick: () => {
+          setDi(idx);
+          setTab("lesson");
+        },
+        style: {
+          width: 32,
+          height: 32,
+          borderRadius: 6,
+          border: act ? `2px solid ${wt2.color}` : `1px solid ${dn ? wt2.color + "50" : C.border}`,
+          background: act ? wt2.color + "25" : dn ? C.card : C.bg,
+          color: act ? wt2.color : dn ? wt2.color : C.muted,
+          cursor: "pointer",
+          fontSize: 11,
+          fontFamily: "Georgia,serif",
+          fontWeight: act ? "bold" : "normal"
+        }
+      }, dn && !act ? "✓" : d.day);
+    })));
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setShowAll(!showAll),
+    style: {
+      marginTop: 7,
+      background: "transparent",
+      color: C.muted,
+      border: "none",
+      cursor: "pointer",
+      fontSize: 11,
+      fontFamily: "Georgia,serif",
+      padding: 0
+    }
+  }, showAll ? "▲ Show less" : "▼ All days")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "15px 16px 0"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: C.muted,
+      marginBottom: 3
+    }
+  }, "Day ", day.day, " of 30 \xB7 ", day.week <= 4 ? `Week ${day.week}` : "Beyond 30 Days"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      margin: "0 0 3px",
+      fontSize: 20,
+      color: C.cream,
+      lineHeight: 1.25
+    }
+  }, day.title), /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: "0 0 11px",
+      fontSize: 13,
+      color: C.muted,
+      fontStyle: "italic"
+    }
+  }, day.subtitle), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.surface,
+      borderRadius: 8,
+      padding: "10px 13px",
+      borderLeft: `3px solid ${tc}`,
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: tc,
+      letterSpacing: 2,
+      textTransform: "uppercase",
+      marginBottom: 4
+    }
+  }, "Jacob Collier"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.soft,
+      fontStyle: "italic",
+      lineHeight: 1.6
+    }
+  }, day.collier))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      margin: "0 16px 14px",
+      background: C.surface,
+      borderRadius: 10,
+      padding: 3,
+      gap: 2
+    }
+  }, [{
+    id: "lesson",
+    label: "📖 Lesson"
+  }, {
+    id: "quiz",
+    label: "❓ Quiz"
+  }, {
+    id: "jam",
+    label: "🎸 Jam"
+  }, {
+    id: "piano",
+    label: "🎹 Piano"
+  }, {
+    id: "circle",
+    label: "⭕ Circle"
+  }].map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    onClick: () => setTab(t.id),
+    style: {
+      flex: 1,
+      padding: "7px 0",
+      border: "none",
+      borderRadius: 7,
+      cursor: "pointer",
+      background: tab === t.id ? tc : "transparent",
+      color: tab === t.id ? "#0e0c1a" : C.muted,
+      fontSize: 10,
+      fontFamily: "Georgia,serif",
+      fontWeight: tab === t.id ? "bold" : "normal",
+      transition: "all .2s"
+    }
+  }, t.label))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0 16px 28px"
+    }
+  }, tab === "lesson" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Card, {
+    title: "The Concept",
+    col: tc
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: 0,
+      fontSize: 14,
+      color: "#c8c0e8",
+      lineHeight: 1.8,
+      whiteSpace: "pre-line"
+    }
+  }, day.theory)), /*#__PURE__*/React.createElement(EarTask, {
+    task: day.earTask
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setDone(p => new Set([...p, di])),
+    style: {
+      width: "100%",
+      padding: 13,
+      border: "none",
+      borderRadius: 12,
+      cursor: "pointer",
+      background: done.has(di) ? `linear-gradient(135deg,#0a2a1a,#34c98a)` : `linear-gradient(135deg,${tc},${C.amber})`,
+      color: done.has(di) ? C.green : "#0e0c1a",
+      fontSize: 15,
+      fontFamily: "Georgia,serif",
+      fontWeight: "bold",
+      letterSpacing: 1,
+      marginBottom: 10,
+      transition: "all .3s"
+    }
+  }, done.has(di) ? "✓ Day Complete — Well done!" : `Mark Day ${day.day} Complete →`), di < DAYS.length - 1 && /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      setDi(di + 1);
+      setTab("lesson");
+    },
+    style: {
+      width: "100%",
+      padding: 11,
+      background: C.surface,
+      color: C.muted,
+      border: `1px solid ${C.border}`,
+      borderRadius: 10,
+      cursor: "pointer",
+      fontSize: 13,
+      fontFamily: "Georgia,serif"
+    }
+  }, "Next: Day ", DAYS[di + 1].day, " \u2014 ", DAYS[di + 1].title, " \u2192")), tab === "quiz" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.muted,
+      textAlign: "center",
+      marginBottom: 14
+    }
+  }, "4 questions on today's concepts. Tap to reveal answers."), /*#__PURE__*/React.createElement(Quiz, {
+    questions: day.quiz
+  })), tab === "jam" && /*#__PURE__*/React.createElement(JamTimer, {
+    prompt: day.jamPrompt,
+    pianoFocus: day.pianoFocus
+  }), tab === "piano" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Card, {
+    title: "Interactive Keyboard",
+    col: C.gold
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: C.muted,
+      marginBottom: 7
+    }
+  }, "Highlight a scale or chord:"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 5
+    }
+  }, Object.entries(SCALES).map(([k, v]) => /*#__PURE__*/React.createElement("button", {
+    key: k,
+    onClick: () => setSk(k),
+    style: {
+      background: sk === k ? v.col + "25" : C.surface,
+      color: sk === k ? v.col : C.muted,
+      border: `1px solid ${sk === k ? v.col : C.border}`,
+      borderRadius: 6,
+      padding: "4px 9px",
+      cursor: "pointer",
+      fontSize: 10,
+      fontFamily: "Georgia,serif"
+    }
+  }, k)))), /*#__PURE__*/React.createElement(Piano, {
+    hl: sd.notes,
+    hlCol: sd.col
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 9,
+      textAlign: "center",
+      fontSize: 12,
+      color: C.muted
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: sd.col
+    }
+  }, "\u25A0"), " ", sk, ": ", /*#__PURE__*/React.createElement("strong", {
+    style: {
+      color: C.text
+    }
+  }, sd.notes.join(" – ")))), /*#__PURE__*/React.createElement(Card, {
+    title: "Today's Piano Tip",
+    col: tc
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: 0,
+      fontSize: 13,
+      color: C.soft,
+      lineHeight: 1.7,
+      fontFamily: "Georgia,serif"
+    }
+  }, day.pianoFocus)), /*#__PURE__*/React.createElement(Card, {
+    title: "Keyboard Anatomy",
+    col: C.blue
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: 0,
+      fontSize: 12,
+      color: C.muted,
+      lineHeight: 1.7
+    }
+  }, "88 keys total (7 octaves + a few). Each octave = 12 keys (7 white, 5 black). The pattern repeats identically. Know one octave \u2014 you know the whole keyboard."))), tab === "circle" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Card, {
+    title: "Circle of Fifths",
+    col: C.red
+  }, /*#__PURE__*/React.createElement(CircleOfFifths, null), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 11,
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 7,
+      fontSize: 11
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.surface,
+      borderRadius: 6,
+      padding: "8px 10px",
+      borderLeft: `2px solid ${C.gold}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.gold,
+      marginBottom: 3,
+      fontWeight: "bold"
+    }
+  }, "\u21BB Clockwise"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.muted,
+      lineHeight: 1.5
+    }
+  }, "Up a 5th \xB7 +1 sharp \xB7 Brighter")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.surface,
+      borderRadius: 6,
+      padding: "8px 10px",
+      borderLeft: `2px solid ${C.purple}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.purple,
+      marginBottom: 3,
+      fontWeight: "bold"
+    }
+  }, "\u21BA Counter-clockwise"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.muted,
+      lineHeight: 1.5
+    }
+  }, "Up a 4th \xB7 +1 flat \xB7 Darker")))), /*#__PURE__*/React.createElement(Card, {
+    title: "Jacob's Light\u2013Dark Spectrum",
+    col: tc
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 2,
+      marginBottom: 7
+    }
+  }, COF_C.map((c, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      flex: 1,
+      height: 18,
+      background: c,
+      borderRadius: 2
+    },
+    title: COF_K[i]
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      fontSize: 10,
+      color: C.muted,
+      marginBottom: 9
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "C \u2014 brightest"), /*#__PURE__*/React.createElement("span", null, "F\u266F \u2014 most distant")), /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: 0,
+      fontSize: 12,
+      color: C.muted,
+      lineHeight: 1.6
+    }
+  }, "Jacob navigates this spectrum intentionally \u2014 using the circle to create emotional arcs from bright (C, G) through rich, complex colours (D\u266D, A\u266D) and back. His modulations are emotional journeys, not just key changes.")), /*#__PURE__*/React.createElement(Card, {
+    title: "Key Signatures",
+    col: C.blue
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr 1fr",
+      gap: 4
+    }
+  }, COF_K.map((k, i) => /*#__PURE__*/React.createElement("div", {
+    key: k,
+    style: {
+      background: C.surface,
+      borderRadius: 6,
+      padding: "6px 8px",
+      borderLeft: `2px solid ${COF_C[i]}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: "bold",
+      color: C.text
+    }
+  }, k), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: C.muted
+    }
+  }, i === 0 ? "no ♯♭" : i <= 6 ? `${i}♯` : `${12 - i}♭`), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: COF_C[i]
+    }
+  }, COF_m[i]))))))));
+}
+    // Mount the app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>
